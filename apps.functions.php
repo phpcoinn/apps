@@ -1,9 +1,18 @@
 <?php
 
-const APPS_REPO_SERVER = "https://repo.testnet.phpcoin.net";
-const APPS_REPO_SERVER_PUBLIC_KEY = "PZ8Tyr4Nx8MHsRAGMpZmZ6TWY63dXWSCwUKtSuRJEs8RrRrkZbND1WxVNomPtvowAo5hzQr6xe2TUyHYLnzu2ubVMfBAYM4cBZJLckvxWenHB2nULzmU8VHz";
-const APPS_WALLET_SERVER_NAME = "wallet.testnet.phpcoin.net";
-const APPS_WALLET_SERVER_PUBLIC_KEY = "PZ8Tyr4Nx8MHsRAGMpZmZ6TWY63dXWSCxxo8UaTrKLceuCRRC4YopodMLvtPp31Bq1JJBmva3StkHMPa2WhgXhPyPLG9GiwEW3PwXDyroZGfNLE4ioqRtwyp";
+global $_config;
+if($_config['testnet']) {
+	define("APPS_REPO_SERVER","https://repo.testnet.phpcoin.net");
+	define("APPS_REPO_SERVER_PUBLIC_KEY","PZ8Tyr4Nx8MHsRAGMpZmZ6TWY63dXWSCwUKtSuRJEs8RrRrkZbND1WxVNomPtvowAo5hzQr6xe2TUyHYLnzu2ubVMfBAYM4cBZJLckvxWenHB2nULzmU8VHz");
+	define("APPS_WALLET_SERVER_NAME","wallet.testnet.phpcoin.net");
+	define("APPS_WALLET_SERVER_PUBLIC_KEY","PZ8Tyr4Nx8MHsRAGMpZmZ6TWY63dXWSCxxo8UaTrKLceuCRRC4YopodMLvtPp31Bq1JJBmva3StkHMPa2WhgXhPyPLG9GiwEW3PwXDyroZGfNLE4ioqRtwyp");
+} else {
+	define("APPS_REPO_SERVER","https://repo..phpcoin.net");
+	define("APPS_REPO_SERVER_PUBLIC_KEY","");
+	define("APPS_WALLET_SERVER_NAME","wallet.phpcoin.net");
+	define("APPS_WALLET_SERVER_PUBLIC_KEY","");
+}
+
 
 function calcAppsHash() {
 	$cmd = "cd ".ROOT."/web && tar -cf - apps --owner=0 --group=0 --sort=name --mode=744 --mtime='2020-01-01 00:00:00 UTC' | sha256sum";
