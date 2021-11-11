@@ -31,12 +31,6 @@ require_once __DIR__. '/../common/include/top.php';
                             In order to mine with address you must have recorded sent transaction on blockchain
                         </div>
                     </div>
-                    <div class="form-group">
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="bgrunning" v-model="minerInBackground">
-                            <label class="form-check-label" for="bgrunning">Run in background</label>
-                        </div>
-                    </div>
                 </form>
             </div>
             <div class="card-footer bg-transparent border-top text-muted">
@@ -203,15 +197,9 @@ require_once __DIR__. '/../common/include/top.php';
                 running: false,
                 miningStat: {},
                 chart : null,
-                webMiner: null,
-                minerInBackground: false
+                webMiner: null
             },
             mounted() {
-                this.minerInBackground = localStorage.getItem('minerInBackground')!= null &&
-                    localStorage.getItem('minerInBackground') === "1"
-                if(this.minerInBackground) {
-                    this.startMiner()
-                }
             },
             methods: {
                 setupMiner() {
@@ -232,15 +220,8 @@ require_once __DIR__. '/../common/include/top.php';
                     this.running = false
                     $("#miningConfig").collapse('show')
                     this.webMiner.stop()
-                    if(this.minerInBackground) {
-                        this.minerInBackground = false
-                        localStorage.removeItem('minerInBackground')
-                    }
                 },
                 async startMiner() {
-                    if(this.minerInBackground) {
-                        localStorage.setItem('minerInBackground', "1");
-                    }
                     this.address = this.address.trim()
                     if(!this.address) {
                         Swal.fire(

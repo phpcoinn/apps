@@ -110,7 +110,7 @@ require_once __DIR__. '/../common/include/top.php';
                     Verify it by send some small amount to other address or faucet.
                     <br/>
                     If you do not have balance you can get it from
-                    <a target="_blank" href="https://node1.testnet.phpcoin.net/apps/faucet" class="alert-link">faucet</a>.
+                    <a target="_blank" href="https://faucet.phpcoin.net/apps/faucet" class="alert-link">faucet</a>.
                 </div>
             <?php } ?>
         </div>

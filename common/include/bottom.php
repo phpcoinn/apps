@@ -1,23 +1,8 @@
 </div>
 </div>
-
-<!--<div class="footer">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-				<?php /*echo COIN_NAME */?> - <?php /*echo $_config['testnet'] ? 'TESTNET' : '' */?> - <?php /*echo VERSION */?>
-            </div>
-            <div class="col-sm-6 d-flex justify-content-end align-items-center">
-                <div class="progress pointer node-score me-1" title="Node score: <?php /*echo $nodeScore */?>%" data-bs-toggle="tooltip">
-                    <div class="progress-bar bg-<?php /*echo ($nodeScore < 50 ? 'danger' : ($nodeScore < 100 ? 'warning' : 'success')) */?>" role="progressbar" style="width: <?php /*echo $nodeScore */?>%" aria-valuenow="<?php /*echo $nodeScore */?>>" aria-valuemin="0" aria-valuemax="100"></div>
-                </div>
-                <span class="badge bg-secondary pointer apps-version me-1" title="Apps version" data-bs-toggle="tooltip"><?php /*echo APPS_VERSION */?></span>
-				<?php /*echo hashimg($appsHash, "Apps hash: ". $appsHash) */?>
-            </div>
-        </div>
-    </div>
-</div>-->
-
+<?php
+global $_config;
+?>
 <footer class="footer">
     <div class="container-fluid">
         <div class="row">
