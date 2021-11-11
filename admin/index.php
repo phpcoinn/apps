@@ -244,12 +244,12 @@ if($view == "server") {
     $serverData['stat']['disktotal']=$disktotal;
     $serverData['stat']['phpload']=$phpload;
 
-    $res = shell_exec("ps aux | grep sync.php | grep -v grep");
+    $res = shell_exec("ps aux | grep '".ROOT."/cli/sync.php' | grep -v grep");
     $sync_running = !empty(trim($res));
     $sync_file = Nodeutil::getSyncFile();
     $sync_lock = file_exists($sync_file);
 
-    $res = shell_exec("ps aux | grep miner.php | grep -v grep");
+    $res = shell_exec("ps aux | grep '".ROOT."/cli/miner.php' | grep -v grep");
     $miner_running = !empty(trim($res));
     $miner_lock = file_exists( ROOT.'/tmp/miner-lock');
 
