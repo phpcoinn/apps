@@ -8,7 +8,7 @@ if($_config['testnet']) {
 	define("APPS_WALLET_SERVER_PUBLIC_KEY","PZ8Tyr4Nx8MHsRAGMpZmZ6TWY63dXWSCxxo8UaTrKLceuCRRC4YopodMLvtPp31Bq1JJBmva3StkHMPa2WhgXhPyPLG9GiwEW3PwXDyroZGfNLE4ioqRtwyp");
 } else {
 	define("APPS_REPO_SERVER","https://repo..phpcoin.net");
-	define("APPS_REPO_SERVER_PUBLIC_KEY","");
+	define("APPS_REPO_SERVER_PUBLIC_KEY","PZ8Tyr4Nx8MHsRAGMpZmZ6TWY63dXWSCyHWjnG15LHdWRRbNEmAPiYcyCqFZm1VKi8QziKYbMtrXUw8rqhrS3EEoyJxXASNZid9CsB1dg64u5sYgnUsrZg7C");
 	define("APPS_WALLET_SERVER_NAME","wallet.phpcoin.net");
 	define("APPS_WALLET_SERVER_PUBLIC_KEY","");
 }
