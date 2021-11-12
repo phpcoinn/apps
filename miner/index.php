@@ -11,7 +11,7 @@ define("APP_NAME", "Miner");
 require_once __DIR__. '/../common/include/top.php';
 ?>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.css" integrity="sha512-cznfNokevSG7QPA5dZepud8taylLdvgr0lDqw/FEZIhluFsSwyvS81CMnRdrNSKwbsmc43LtRd2/WMQV+Z85AQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-	<div id="app">
+	<div id="app" style="visibility: hidden">
 
         <div class="card">
             <div class="card-header">
@@ -200,6 +200,7 @@ require_once __DIR__. '/../common/include/top.php';
                 webMiner: null
             },
             mounted() {
+                this.$el.style.visibility = 'visible'
             },
             methods: {
                 setupMiner() {
