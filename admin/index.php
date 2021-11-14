@@ -107,6 +107,17 @@ if(isset($_GET['action'])) {
 	    header("location: ".APP_URL."/?view=peers");
 	    exit;
     }
+	if($action == "repeer") {
+		$id = $_GET['id'];
+		$peer = $_GET['peer'];
+		if(!empty($id)) {
+			Peer::delete($id);
+			$cmd = "php ".ROOT."/cli/util.php peer " . $peer . " > /dev/null 2>&1 &";
+			$res = shell_exec($cmd);
+		}
+		header("location: ".APP_URL."/?view=peers");
+		exit;
+	}
     if($action == "update") {
         $res = peer_post(APPS_REPO_SERVER."/peer.php?q=getApps");
         if($res === false) {
@@ -808,6 +819,7 @@ require_once __DIR__. '/../common/include/top.php';
                             <td><?php echo $peer['blacklist_reason'] ?></td>
                             <td>
                                 <a class="btn btn-danger btn-xs" href="<?php echo APP_URL ?>/?action=delete_peer&id=<?php echo $peer['id']  ?>" onclick="if(!confirm('Delete peer?')) return false;">Delete</a>
+                                <a class="btn btn-warning btn-xs" href="<?php echo APP_URL ?>/?action=repeer&id=<?php echo $peer['id']  ?>&peer=<?php echo $peer['hostname'] ?>">Re-peer</a>
                             </td>
                         </tr>
                     <?php } ?>

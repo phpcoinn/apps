@@ -12,8 +12,6 @@ if(!defined("PAGE")) exit;
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, shrink-to-fit=no">
 
 
-    <!-- plugin css -->
-<!--    <link href="http://localhost:3000/assets/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css" rel="stylesheet" type="text/css" />-->
     <!-- preloader css -->
     <link rel="stylesheet" href="/apps/common/css/preloader.min.css" type="text/css" />
     <!-- Bootstrap Css -->
@@ -33,55 +31,6 @@ if(!defined("PAGE")) exit;
 
 <body class="phpcoin" data-layout="horizontal">
 
-
-
-
-    <!--<nav class="navbar navbar-expand-lg sticky-top">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <img src="/apps/common/img/logo.png" alt="" class="d-inline-block align-text-top">
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li class="nav-item">
-                        <a class="nav-link" aria-current="page" href="/">
-                            <i class="bi bi-house-door"></i> Home
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php /*if (APP_NAME == "Miner") { */?>active<?php /*} */?>" href="/apps/miner">
-                            <i class="bi bi-hammer"></i> Miner
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php /*if (APP_NAME == "Explorer") { */?>active<?php /*} */?>" href="/apps/explorer">
-                            <i class="bi bi-binoculars"></i> Explorer
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link <?php /*if (APP_NAME == "Wallet") { */?>active<?php /*} */?>" href="/apps/wallet">
-                            <i class="bi bi-wallet"></i> Wallet
-                        </a>
-                    </li>
-                </ul>
-                <div class="d-flex">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <?php /*if($_config['admin']) { */?>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/apps/admin">
-                                    <i class="bi bi-gear"></i> Admin
-                                </a>
-                            </li>
-                        <?php /*} */?>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </nav>-->
-
 <!--    layout-wrapper-->
     <div id="layout-wrapper">
 
@@ -93,9 +42,11 @@ if(!defined("PAGE")) exit;
                         <i class="fa fa-fw fa-bars"></i>
                     </button>
 
-                    <a class="navbar-brand" href="#">
+                    <a class="navbar-brand" href="https://phpcoin.net" target="_blank">
                         <img src="/apps/common/img/logo.png" alt="" class="d-inline-block">
-                        <span class="logo-txt text-primary">phpCoin</span>
+                        <span class="logo-txt text-primary">
+                            <?php echo COIN_NAME ?>
+                        </span>
                     </a>
 
                     <div class="collapse navbar-collapse d-lg-flex justify-content-between" id="topnav-menu-content">

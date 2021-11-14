@@ -1863,34 +1863,6 @@ class WebMiner {
                 headers: {'Content-type': 'application/x-www-form-urlencoded'},
                 data: new URLSearchParams(postData).toString()
             })
-            console.log(response)
-
-            //reward tx
-            // let rewardTx = await this.getRewardTx(generator, reward, new_block_date, this.publicKey)
-            // console.log(rewardTx)
-            // data[rewardTx.id]=rewardTx
-            // data = sortTx(data)
-            // json = JSON.stringify(data)
-            // signatureBase = `${generator}-${height}-${new_block_date}-${calcNonce}-${json}-${difficulty}-${version}-${argon}-${block}`
-            // signature = sign(signatureBase, this.privateKey)
-            // console.log("signatureBase",signatureBase,signature)
-            // this.miner.calOffset = calOffset
-            // this.miner.json = json
-            // this.miner.version = version
-            // this.miner.signatureBase = signatureBase
-            // this.miner.signature = signature
-            // let postData = {
-            //     argon, nonce: calcNonce, height, difficulty,
-            //     public_key: this.publicKey, signature,
-            //     date: new_block_date, data: JSON.stringify(data),
-            //     elapsed
-            // }
-            // response = await axios({
-            //     method: 'post',
-            //     url: this.node + '/mine.php?q=submitBlock',
-            //     headers: {'Content-type': 'application/x-www-form-urlencoded'},
-            //     data: new URLSearchParams(postData).toString()
-            // })
             if(response.data.status === 'ok') {
                 this.miningStat.accepted ++
             } else {
