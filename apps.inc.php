@@ -66,7 +66,7 @@ $dev = false;
 $adminView = (strpos($_SERVER['REQUEST_URI'], "/apps/admin")===0);
 
 //check and show git version
-$gitRev = shell_exec("cd . ".ROOT." && git rev-parse HEAD");
+$gitRev = shell_exec("cd . ".ROOT." && git log -n 1 --pretty=format:\"%H\"");
 
 if(!$dev) {
 	$peers = Peer::getActive();
