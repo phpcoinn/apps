@@ -5,6 +5,10 @@ define("APP_NAME", "Explorer");
 
 $peers = Peer::getAll();
 
+function truncate_hash($hash) {
+    return substr($hash, 0, 8) . "..." . substr($hash, -8);
+}
+
 ?>
 
 <?php
@@ -45,8 +49,20 @@ require_once __DIR__. '/../common/include/top.php';
                     <td><?php echo $peer['ip'] ?></td>
                     <td><?php echo display_date($peer['ping']) ?></td>
                     <td><?php echo $peer['height'] ?></td>
-                    <td><?php echo $peer['appshash'] ?></td>
-                    <td><?php echo $peer['score'] ?></td>
+                    <td class="">
+                        <?php echo truncate_hash($peer['appshash']) ?>
+                        <div class="app-hash">
+                            <?php echo hashimg($peer['appshash'], "Apps hash: ". $peer['appshash']) ?>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="ns">
+                            <div class="progress progress-lg node-score me-1">
+                                <div class="progress-bar bg-<?php echo ($peer['score'] < MIN_NODE_SCORE / 2 ? 'danger' : ($peer['score'] < MIN_NODE_SCORE ? 'warning' : 'success')) ?>" role="progressbar" style="width: <?php echo $peer['score'] ?>%;" aria-valuenow="<?php echo $peer['score'] ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                            </div>
+                        </div>
+                        <?php echo $peer['score'] ?>
+                    </td>
                 </tr>
             <?php } ?>
         </tbody>
@@ -61,3 +77,8 @@ require_once __DIR__. '/../common/include/top.php';
 <?php
 require_once __DIR__ . '/../common/include/bottom.php';
 ?>
+<style>
+    .app-hash, .ns {
+        display:inline-block;
+    }
+</style>
