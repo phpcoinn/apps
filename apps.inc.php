@@ -60,7 +60,7 @@ if(!file_exists($appsHashFile)) {
 
 $appsHash = file_get_contents($appsHashFile);
 
-$nodeScore = $_config['node_score'];
+$nodeScore = round($_config['node_score'],2);
 
 $dev = false;
 $adminView = (strpos($_SERVER['REQUEST_URI'], "/apps/admin")===0);
