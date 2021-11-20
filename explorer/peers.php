@@ -76,7 +76,7 @@ require_once __DIR__. '/../common/include/top.php';
     <div><?php echo $blacklisted_cnt ?> blacklisted</div>
 <?php } ?>
 
-<div>Node score: <?php echo $_config['node_score']; ?>%</div>
+<div>Node score: <?php echo round($_config['node_score'],2); ?>%</div>
 
 <?php
 require_once __DIR__ . '/../common/include/bottom.php';

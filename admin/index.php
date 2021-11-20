@@ -797,6 +797,7 @@ require_once __DIR__. '/../common/include/top.php';
                         <th>Hostname</th>
                         <th>Blacklisted</th>
                         <th>Ping</th>
+                        <th>Height</th>
                         <th>Reserve</th>
                         <th>Ip</th>
                         <th>Fails</th>
@@ -812,6 +813,7 @@ require_once __DIR__. '/../common/include/top.php';
                             <td><?php echo $peer['hostname'] ?></td>
                             <td><?php echo display_date($peer['blacklisted']) ?></td>
                             <td><?php echo display_date($peer['ping']) ?></td>
+                            <td><?php echo $peer['height'] ?></td>
                             <td><?php echo $peer['reserve'] ?></td>
                             <td><?php echo $peer['ip'] ?></td>
                             <td><?php echo $peer['fails'] ?></td>
