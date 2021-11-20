@@ -47,6 +47,19 @@ if(isset($_POST['action'])) {
 
     //check remote addr
     $ip = $_SERVER['REMOTE_ADDR'];
+
+
+	$sql="select count(*) as cnt from mempool t where t.message =:msg";
+	$row = $db->row($sql, [":msg"=> $ip]);
+	$cnt = $row['cnt'];
+	if($cnt > 0) {
+		_log("Faucet: attempt to use faucet for address $address from IP $ip. tx in mempool", 3);
+		$_SESSION['msg']=[['icon'=>'error', 'text'=>'Not allowed use of faucet from same IP address for 60 blocks']];
+		header("location: /apps/faucet/index.php");
+		exit;
+	}
+
+
     $height = Block::getHeight();
 	$check_height = $height - 60;
     $sql="select count(*) as cnt from transactions t where t.message =:msg and t.height > :height";
@@ -54,7 +67,7 @@ if(isset($_POST['action'])) {
     $cnt = $row['cnt'];
 
     if($cnt > 0) {
-        _log("Faucet: attempt to use faucet for address $address from IP $ip", 3);
+        _log("Faucet: attempt to use faucet for address $address from IP $ip. tx in blockchain", 3);
 	    $_SESSION['msg']=[['icon'=>'error', 'text'=>'Not allowed use of faucet from same IP address for 60 blocks']];
 	    header("location: /apps/faucet/index.php");
 	    exit;
