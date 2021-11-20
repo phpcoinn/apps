@@ -50,18 +50,22 @@ require_once __DIR__. '/../common/include/top.php';
                     <td><?php echo display_date($peer['ping']) ?></td>
                     <td><?php echo $peer['height'] ?></td>
                     <td class="">
-                        <?php echo truncate_hash($peer['appshash']) ?>
-                        <div class="app-hash">
-                            <?php echo hashimg($peer['appshash'], "Apps hash: ". $peer['appshash']) ?>
-                        </div>
+                        <?php if($peer['appshash']) { ?>
+                            <?php echo truncate_hash($peer['appshash']) ?>
+                            <div class="app-hash">
+                                <?php echo hashimg($peer['appshash'], "Apps hash: ". $peer['appshash']) ?>
+                            </div>
+                        <?php } ?>
                     </td>
                     <td>
-                        <div class="ns">
-                            <div class="progress progress-lg node-score me-1">
-                                <div class="progress-bar bg-<?php echo ($peer['score'] < MIN_NODE_SCORE / 2 ? 'danger' : ($peer['score'] < MIN_NODE_SCORE ? 'warning' : 'success')) ?>" role="progressbar" style="width: <?php echo $peer['score'] ?>%;" aria-valuenow="<?php echo $peer['score'] ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                        <?php if ($peer['score']) { ?>
+                            <div class="ns">
+                                <div class="progress progress-lg node-score me-1">
+                                    <div class="progress-bar bg-<?php echo ($peer['score'] < MIN_NODE_SCORE / 2 ? 'danger' : ($peer['score'] < MIN_NODE_SCORE ? 'warning' : 'success')) ?>" role="progressbar" style="width: <?php echo $peer['score'] ?>%;" aria-valuenow="<?php echo $peer['score'] ?>" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
                             </div>
-                        </div>
-                        <?php echo $peer['score'] ?>
+                            <?php echo $peer['score'] ?>
+                        <?php } ?>
                     </td>
                 </tr>
             <?php } ?>
