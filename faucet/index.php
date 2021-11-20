@@ -14,6 +14,7 @@ if(!(isset($_config['faucet']) && $_config['faucet'] && !empty($_config['faucet_
 $faucetAddress = Account::getAddress($_config['faucet_public_key']);
 $faucetBalance = Account::getBalance($faucetAddress);
 
+global $db;
 
 if(isset($_POST['action'])) {
     $address = $_POST['address'];
@@ -44,9 +45,24 @@ if(isset($_POST['action'])) {
 	    exit;
     }
 
+    //check remote addr
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $height = Block::getHeight();
+	$check_height = $height - 60;
+    $sql="select count(*) as cnt from transactions t where t.message =:msg and t.height > :height";
+    $row = $db->row($sql, [":msg"=> $ip, ":height" => $check_height]);
+    $cnt = $row['cnt'];
+
+    if($cnt > 0) {
+        _log("Faucet: attempt to use faucet for address $address from IP $ip", 3);
+	    $_SESSION['msg']=[['icon'=>'error', 'text'=>'Not allowed use of faucet from same IP address for 60 blocks']];
+	    header("location: /apps/faucet/index.php");
+	    exit;
+    }
+
     $val = 0.01;
 	$fee = 0;
-	$msg = "faucet";
+	$msg = $ip;
 	$date = time();
 
 	$transaction = new Transaction($_config['faucet_public_key'],$address,$val,TX_TYPE_SEND,$date,$msg);
