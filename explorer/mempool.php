@@ -27,6 +27,7 @@ require_once __DIR__. '/../common/include/top.php';
 			<th>Dst</th>
 			<th>Value</th>
 			<th>Type</th>
+			<th>Message</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -40,6 +41,7 @@ require_once __DIR__. '/../common/include/top.php';
 			<td><a href="/apps/explorer/address.php?address=<?php echo $transaction['dst'] ?>"><?php echo $transaction['dst'] ?></a></td>
 			<td><?php echo $transaction['val'] ?></td>
 			<td><?php echo $transaction['type'] ?></td>
+			<td><?php echo $transaction['message'] ?></td>
 		</tr>
 		<?php } ?>
 	</tbody>

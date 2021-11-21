@@ -17,6 +17,19 @@ $faucetBalance = Account::getBalance($faucetAddress);
 global $db;
 
 if(isset($_POST['action'])) {
+	$captcha = $_POST['captcha'];
+	if(empty($captcha)) {
+		$_SESSION['msg']=[['icon'=>'error', 'text'=>'Image text not entered']];
+		header("location: /apps/faucet/index.php");
+		exit;
+	}
+
+	if(!isset($_SESSION['captcha_text']) || $_SESSION['captcha_text'] != $captcha) {
+		$_SESSION['msg']=[['icon'=>'error', 'text'=>'Image text is not correct']];
+		header("location: /apps/faucet/index.php");
+		exit;
+    }
+
     $address = $_POST['address'];
     if(empty($address) || !Account::valid($address)) {
 	    $_SESSION['msg']=[['icon'=>'error', 'text'=>'Invalid or empty address']];
@@ -111,6 +124,23 @@ require_once __DIR__. '/../common/include/top.php';
                         <input type="text" id="address" name="address" class="form-control" value=""/>
                         <input type="hidden" name="action" value="faucet"/>
                     </div>
+                    <div class="mb-1">
+                        <label>Enter text from image</label>
+                        <div class="row">
+                            <div class="col-4">
+                                <img src="captcha.php" id="captcha_img"/>
+                            </div>
+                            <div class="col-1">
+                                <button type="button" class="btn btn-soft-dark waves-effect waves-light"
+                                    onclick="refreshCaptcha()" title="Refresh image" data-bs-toggle="tooltip">
+                                    <i class="fas fa-redo font-size-16 align-middle"></i>
+                                </button>
+                            </div>
+                            <div class="col-4">
+                                <input type="text" id="captcha" name="captcha" class="form-control" value=""/>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer bg-transparent border-top text-muted">
                     <button type="submit" class="btn btn-success">Receive</button>
@@ -134,6 +164,11 @@ require_once __DIR__. '/../common/include/top.php';
     </div>
 </div>
 
+<script type="text/javascript">
+    function refreshCaptcha() {
+        document.getElementById('captcha_img').src = 'captcha.php?t=' + Date.now();
+    }
+</script>
 
 <?php
 require_once __DIR__ . '/../common/include/bottom.php';
