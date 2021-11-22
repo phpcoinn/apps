@@ -41,7 +41,7 @@ require_once __DIR__. '/../common/include/top.php';
 			<td><a href="/apps/explorer/address.php?address=<?php echo $transaction['dst'] ?>"><?php echo $transaction['dst'] ?></a></td>
 			<td><?php echo $transaction['val'] ?></td>
 			<td><?php echo $transaction['type'] ?></td>
-			<td><?php echo $transaction['message'] ?></td>
+			<td style="word-break: break-all"><?php echo $transaction['message'] ?></td>
 		</tr>
 		<?php } ?>
 	</tbody>

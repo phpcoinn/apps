@@ -98,7 +98,7 @@ require_once __DIR__. '/../common/include/top.php';
                     <td><?php echo $transaction['type_label'] ?></td>
                     <td><?php echo num($transaction['val']) ?></td>
 <!--                    <td>--><?php //echo num($transaction['fee']) ?><!--</td>-->
-                    <td><?php echo $transaction['message'] ?></td>
+                    <td style="word-break: break-all"><?php echo $transaction['message'] ?></td>
                 </tr>
 			<?php } ?>
             </tbody>
@@ -145,7 +145,7 @@ require_once __DIR__. '/../common/include/top.php';
                 <td><?php echo $transaction['type_label'] ?></td>
                 <td class="<?php echo $transaction['sign']=='-' ? 'text-danger' : 'text-success' ?>"><?php echo $transaction['sign'] .  num($transaction['val']) ?></td>
 <!--                <td>--><?php //echo num($transaction['fee']) ?><!--</td>-->
-                <td><?php echo $transaction['message'] ?></td>
+                <td style="word-break: break-all"><?php echo $transaction['message'] ?></td>
             </tr>
     <?php } ?>
     </tbody>
