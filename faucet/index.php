@@ -60,10 +60,13 @@ if(isset($_POST['action'])) {
 
     //check remote addr
     $ip = $_SERVER['REMOTE_ADDR'];
+    $faucetAddress = Account::getAddress($_config['faucet_public_key']);
+	$options['salt']=substr($faucetAddress, 0, 16);
+    $ipArgon = password_hash($ip, HASHING_ALGO, $options);
 
 
 	$sql="select count(*) as cnt from mempool t where t.message =:msg";
-	$row = $db->row($sql, [":msg"=> $ip]);
+	$row = $db->row($sql, [":msg"=> $ipArgon]);
 	$cnt = $row['cnt'];
 	if($cnt > 0) {
 		_log("Faucet: attempt to use faucet for address $address from IP $ip. tx in mempool", 3);
@@ -76,7 +79,7 @@ if(isset($_POST['action'])) {
     $height = Block::getHeight();
 	$check_height = $height - 60;
     $sql="select count(*) as cnt from transactions t where t.message =:msg and t.height > :height";
-    $row = $db->row($sql, [":msg"=> $ip, ":height" => $check_height]);
+    $row = $db->row($sql, [":msg"=> $ipArgon, ":height" => $check_height]);
     $cnt = $row['cnt'];
 
     if($cnt > 0) {
@@ -88,7 +91,7 @@ if(isset($_POST['action'])) {
 
     $val = 0.01;
 	$fee = 0;
-	$msg = $ip;
+	$msg = $ipArgon;
 	$date = time();
 
 	$transaction = new Transaction($_config['faucet_public_key'],$address,$val,TX_TYPE_SEND,$date,$msg);
