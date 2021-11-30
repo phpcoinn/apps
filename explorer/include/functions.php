@@ -1,7 +1,11 @@
 <?php
 
-function explorer_address_link($address) {
-	return '<a target="_blank" href="/apps/explorer/address.php?address='.$address.'">'.$address.'</a>';
+function explorer_address_link($address, $short= false) {
+	$text  = $address;
+	if($short) {
+		$text  = truncate_hash($address);
+	}
+	return '<a target="_blank" href="/apps/explorer/address.php?address='.$address.'">'.$text.'</a>';
 }
 function explorer_address_pubkey($pubkey, $show = 12) {
 	if(!empty($pubkey)) {

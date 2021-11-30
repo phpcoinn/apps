@@ -234,6 +234,7 @@ $elapsed = time() - $last['date'];
                 <th>Height</th>
                 <th>ID</th>
                 <th>Generator</th>
+                <th>Miner</th>
                 <th>Date</th>
                 <th>Difficulty</th>
                 <th>Transactions</th>
@@ -249,8 +250,9 @@ $elapsed = time() - $last['date'];
                             <?php echo $block['height'] ?>
                         </a>
                     </td>
-                    <td><?php echo $block['id'] ?></td>
-                    <td><?php echo explorer_address_link($block['generator']) ?></td>
+                    <td><?php echo truncate_hash($block['id']) ?></td>
+                    <td><?php echo explorer_address_link2($block['generator'], true) ?></td>
+                    <td><?php echo explorer_address_link2($block['miner'], true) ?></td>
                     <td><?php echo display_date($block['date']) ?></td>
                     <td><?php echo $block['difficulty'] ?></td>
                     <td><?php echo $block['transactions'] ?></td>

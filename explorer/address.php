@@ -87,7 +87,11 @@ require_once __DIR__. '/../common/include/top.php';
                 }
 			    ?>
                 <tr>
-                    <td><a href="/apps/explorer/tx.php?id=<?php echo $transaction['id'] ?>"><?php echo $transaction['id'] ?></a></td>
+                    <td>
+                        <a href="/apps/explorer/tx.php?id=<?php echo $transaction['id'] ?>">
+                            <?php echo truncate_hash($transaction['id']) ?>
+                        </a>
+                    </td>
                     <td><?php echo display_date($transaction['date']) ?></td>
                     <td><a href="/apps/explorer/block.php?height=<?php echo $transaction['block'] ?>">
 							<?php echo $transaction['height'] ?></a></td>
@@ -118,7 +122,7 @@ require_once __DIR__. '/../common/include/top.php';
             <th>From/To</th>
             <th>Type</th>
             <th>Value</th>
-            <th>Message</th>
+<!--            <th>Message</th>-->
 <!--            <th>Fee</th>-->
         </tr>
     </thead>
@@ -134,18 +138,22 @@ require_once __DIR__. '/../common/include/top.php';
             }
             ?>
             <tr>
-                <td><a href="/apps/explorer/tx.php?id=<?php echo $transaction['id'] ?>"><?php echo $transaction['id'] ?></a></td>
+                <td>
+                    <a href="/apps/explorer/tx.php?id=<?php echo $transaction['id'] ?>">
+                        <?php echo truncate_hash($transaction['id']) ?>
+                    </a>
+                </td>
                 <td><?php echo display_date($transaction['date']) ?></td>
                 <td><a href="/apps/explorer/block.php?height=<?php echo $transaction['height'] ?>">
                         <?php echo $transaction['height'] ?></a></td>
                 <td><a href="/apps/explorer/block.php?height=<?php echo $transaction['height'] ?>">
-                        <?php echo $transaction['block'] ?></a></td>
+                        <?php echo truncate_hash($transaction['block']) ?></a></td>
                 <td><a href="/apps/explorer/address.php?address=<?php echo $party ?>">
-			            <?php echo $party ?></a></td>
+			            <?php echo truncate_hash($party) ?></a></td>
                 <td><?php echo $transaction['type_label'] ?></td>
                 <td class="<?php echo $transaction['sign']=='-' ? 'text-danger' : 'text-success' ?>"><?php echo $transaction['sign'] .  num($transaction['val']) ?></td>
 <!--                <td>--><?php //echo num($transaction['fee']) ?><!--</td>-->
-                <td style="word-break: break-all"><?php echo $transaction['message'] ?></td>
+<!--                <td style="word-break: break-all">--><?php //echo $transaction['message'] ?><!--</td>-->
             </tr>
     <?php } ?>
     </tbody>

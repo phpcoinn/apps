@@ -27,3 +27,16 @@ function buildAppsArchive() {
 	$cmd = "cd ".ROOT." && tar -czf tmp/apps.tar.gz web/apps --owner=0 --group=0 --sort=name --mode=744 --mtime='2020-01-01 00:00:00 UTC'";
 	shell_exec($cmd);
 }
+
+function truncate_hash($hash, $digits = 8) {
+	$thash = substr($hash, 0, $digits) . "..." . substr($hash, -$digits);
+	return '<span data-bs-toggle="tooltip" title="'.$hash.'">' . $thash . '</span>';
+}
+
+function explorer_address_link2($address, $short= false) {
+	$text  = $address;
+	if($short) {
+		$text  = truncate_hash($address);
+	}
+	return '<a target="_blank" href="/apps/explorer/address.php?address='.$address.'">'.$text.'</a>';
+}
