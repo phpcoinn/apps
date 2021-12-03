@@ -6,6 +6,8 @@ define("APP_NAME", "Explorer");
 
 require_once __DIR__. '/include/actions.php';
 
+global $db;
+
 $blockCount = Block::getHeight();
 $rowsPerPage = 10;
 $pages = ceil($blockCount / $rowsPerPage);
@@ -36,6 +38,12 @@ $avgBlockTime100 = BlockChain::getAvgBlockTime(100);
 
 $last = Block::getAtHeight($blockCount);
 $elapsed = time() - $last['date'];
+
+if (Nodeutil::miningEnabled()) {
+	$rows = $db->run("select * from minepool order by height desc");
+	$minepoolCount = count($rows);
+}
+
 ?>
 <?php
     require_once __DIR__. '/../common/include/top.php';
@@ -168,7 +176,7 @@ $elapsed = time() - $last['date'];
         <div class="card card-h-100">
             <div class="card-body">
                 <div class="row align-items-center">
-                    <div class="col-12">
+                    <div class="col-6">
                         <i class="fas fa-hourglass-start  me-1 h4"></i>
                         <span class="text-muted mb-3 lh-1 text-truncate h4">
                             <a href="/apps/explorer/mempool.php">Mempool</a>
@@ -177,6 +185,17 @@ $elapsed = time() - $last['date'];
                             <?php echo $mempoolCount ?>
                         </h2>
                     </div>
+                    <?php if (Nodeutil::miningEnabled()) { ?>
+                        <div class="col-6">
+                            <i class="fas fa-running  me-1 h4"></i>
+                            <span class="text-muted mb-3 lh-1 text-truncate h4">
+                                Minepool
+                            </span>
+                            <h2 class="my-2">
+                                <?php echo $minepoolCount ?>
+                            </h2>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
         </div>

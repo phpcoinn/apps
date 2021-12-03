@@ -276,7 +276,7 @@ if($view == "db") {
         $version = $db->single("select sqlite_version();");
         $dbData['server'] = $version;
     }
-    foreach (['blocks','transactions', 'peers', 'mempool', 'accounts'] as $table) {
+    foreach (['blocks','transactions', 'peers', 'mempool', 'accounts', 'minepool'] as $table) {
         $cnt = $db->single("select count(*) from $table");
         $dbData['tables'][$table]=$cnt;
     }
@@ -452,6 +452,13 @@ require_once __DIR__. '/../common/include/top.php';
                 <span>Peers</span>
             </a>
         </li>
+	    <?php if (Nodeutil::miningEnabled()) { ?>
+            <li class="nav-item">
+                <a class="nav-link <?php if ($view == "minepool") { ?>active<?php } ?>" href="<?php echo APP_URL ?>/?view=minepool" role="tab" aria-selected="false">
+                    <span>Minepool</span>
+                </a>
+            </li>
+        <?php } ?>
         <li class="nav-item">
             <a class="nav-link <?php if ($view == "config") { ?>active<?php } ?>" href="<?php echo APP_URL ?>/?view=config" role="tab" aria-selected="false">
                 <span>Config</span>
@@ -832,6 +839,40 @@ require_once __DIR__. '/../common/include/top.php';
 
 
 		<?php } ?>
+
+	    <?php if($view == "minepool") {
+
+	        $rows = $db->run("select * from minepool order by height desc");
+
+	        ?>
+
+            <h4>Minepool</h4>
+            <div class="table-responsive">
+                <table class="table table-sm table-striped">
+                    <thead>
+                        <tr>
+                            <th>Address</th>
+                            <th>Height</th>
+                            <th>Miner</th>
+                            <th>IP Hash</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($rows as $row) { ?>
+                            <tr>
+                                <td><?php echo explorer_address_link($row['address']) ?></td>
+                                <td>
+                                    <a href="/apps/explorer/block.php?height=<?php echo $row['height'] ?>"><?php echo $row['height'] ?></a>
+                                </td>
+                                <td><?php echo $row['miner'] ?></td>
+                                <td><?php echo $row['iphash'] ?></td>
+                            </tr>
+                        <?php } ?>
+                    </tbody>
+                </table>
+            </div>
+
+        <?php } ?>
 
 
 	    <?php if($view == "config") {
