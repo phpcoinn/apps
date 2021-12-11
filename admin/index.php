@@ -807,6 +807,7 @@ require_once __DIR__. '/../common/include/top.php';
                         <th>Height</th>
                         <th>Reserve</th>
                         <th>Ip</th>
+                        <th>Version</th>
                         <th>Fails</th>
                         <th>Stuckfail</th>
                         <th>Reason</th>
@@ -823,6 +824,7 @@ require_once __DIR__. '/../common/include/top.php';
                             <td><?php echo $peer['height'] ?></td>
                             <td><?php echo $peer['reserve'] ?></td>
                             <td><?php echo $peer['ip'] ?></td>
+                            <td><?php echo $peer['version'] ?></td>
                             <td><?php echo $peer['fails'] ?></td>
                             <td><?php echo $peer['stuckfail'] ?></td>
                             <td><?php echo $peer['blacklist_reason'] ?></td>
