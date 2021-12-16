@@ -179,12 +179,12 @@ require_once __DIR__. '/../common/include/top.php';
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js" integrity="sha512-FHsFVKQ/T1KWJDGSbrUhTJyS1ph3eRrxI228ND0EGaEp6v4a/vGwPWd3Dtd/+9cI7ccofZvl/wulICEurHN1pg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.js" integrity="sha512-+IpCthlNahOuERYUSnKFjzjdKXIbJ/7Dd6xvUp+7bEw0Jp2dg6tluyxLs+zq9BMzZgrLv8886T4cBSqnKiVgUw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 	<script type="text/javascript">
-
+        <?php $hashingOptions = Block::hashingOptions(Block::getHeight()+1) ?>
 
         let hashingConfig = {
-            mem: <?php echo HASHING_OPTIONS['memory_cost'] ?>,
-            time: <?php echo HASHING_OPTIONS['time_cost'] ?>,
-            parallelism: <?php echo HASHING_OPTIONS['threads'] ?>
+            mem: <?php echo $hashingOptions['memory_cost'] ?>,
+            time: <?php echo $hashingOptions['time_cost'] ?>,
+            parallelism: <?php echo $hashingOptions['threads'] ?>
         }
 
         var app = new Vue({
