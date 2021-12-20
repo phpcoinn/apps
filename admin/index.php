@@ -323,6 +323,9 @@ if($view == "peers") {
     $peers = Peer::getAll();
 }
 
+//TODO: $minepool_enabled = Minepool::enabled();
+$minepool_enabled = (isset($_config['minepool']) && $_config['minepool']);
+
 ?>
 
 <?php
@@ -452,7 +455,7 @@ require_once __DIR__. '/../common/include/top.php';
                 <span>Peers</span>
             </a>
         </li>
-	    <?php if (Nodeutil::miningEnabled()) { ?>
+	    <?php if (Nodeutil::miningEnabled() && $minepool_enabled) { ?>
             <li class="nav-item">
                 <a class="nav-link <?php if ($view == "minepool") { ?>active<?php } ?>" href="<?php echo APP_URL ?>/?view=minepool" role="tab" aria-selected="false">
                     <span>Minepool</span>

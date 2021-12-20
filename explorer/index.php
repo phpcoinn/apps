@@ -39,7 +39,10 @@ $avgBlockTime100 = BlockChain::getAvgBlockTime(100);
 $last = Block::getAtHeight($blockCount);
 $elapsed = time() - $last['date'];
 
-if (Nodeutil::miningEnabled()) {
+//TODO: $minepool_enabled = Minepool::enabled();
+$minepool_enabled = (isset($_config['minepool']) && $_config['minepool']);
+
+if (Nodeutil::miningEnabled() && $minepool_enabled) {
 	$rows = $db->run("select * from minepool order by height desc");
 	$minepoolCount = count($rows);
 }
@@ -185,7 +188,7 @@ if (Nodeutil::miningEnabled()) {
                             <?php echo $mempoolCount ?>
                         </h2>
                     </div>
-                    <?php if (Nodeutil::miningEnabled()) { ?>
+                    <?php if (Nodeutil::miningEnabled() && $minepool_enabled) { ?>
                         <div class="col-6">
                             <i class="fas fa-running  me-1 h4"></i>
                             <span class="text-muted mb-3 lh-1 text-truncate h4">
