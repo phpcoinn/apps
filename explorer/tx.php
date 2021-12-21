@@ -4,7 +4,7 @@ define("PAGE", true);
 define("APP_NAME", "Explorer");
 $id = $_GET['id'];
 $tx = Transaction::get_transaction($id);
-
+$tx_height = $tx['height'];
 if(!$tx) {
 	$tx = Transaction::getMempoolById($id);
     if(!$tx) {
@@ -21,7 +21,7 @@ if(isset($_GET['action'])) {
         } else {
 		    $tx = Transaction::getById($id);
         }
-	    $res = $tx->check();
+	    $res = $tx->check($tx_height);
 	    if($res) {
 	        die("Transaction valid");
         } else {
