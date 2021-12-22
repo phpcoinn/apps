@@ -34,11 +34,21 @@ require_once __DIR__. '/../common/include/top.php';
                 </form>
             </div>
             <div class="card-footer bg-transparent border-top text-muted">
-                <button class="btn btn-success" @click="startMiner" v-if="!running">Start</button>
-                <button class="btn btn-danger"  @click="stopMiner" v-if="running">Stop</button>
-                <span v-if="running" class="h5 ms-2">
-                    Mining address: {{address}}
-                </span>
+                <div class="row">
+                    <div class="col">
+                        <button class="btn btn-success" @click="startMiner" v-if="!running">Start</button>
+                        <button class="btn btn-danger"  @click="stopMiner" v-if="running">Stop</button>
+                        <span v-if="running" class="h5 ms-2">
+                            Mining address: {{address}}
+                        </span>
+                    </div>
+                    <div class="col" v-if="running">
+                        <div class="h5 ms-2">
+                            Speed: {{miner.speed}} H/s
+                            <input type="range" class="form-range" v-model="cpu" @change="updateMinerCpu" min="0" max="100">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -197,7 +207,8 @@ require_once __DIR__. '/../common/include/top.php';
                 running: false,
                 miningStat: {},
                 chart : null,
-                webMiner: null
+                webMiner: null,
+                cpu: 0
             },
             mounted() {
                 this.$el.style.visibility = 'visible'
@@ -303,6 +314,9 @@ require_once __DIR__. '/../common/include/top.php';
                         return
                     }
                     this.webMiner.resetStat()
+                },
+                updateMinerCpu() {
+                    this.webMiner.updateCpu(this.cpu)
                 }
             }
         })
