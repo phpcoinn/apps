@@ -107,7 +107,7 @@ require_once __DIR__. '/../common/include/top.php';
                             </div>
                         </div>
 
-                        <div class="row">
+                        <div class="row" v-if="miningStat">
                             <div class="col-sm-4">
                                 <div class="card bg-primary border-primary">
                                     <div class="card-body h5 mb-0 p-2 text-white-50 d-flex justify-content-between">
@@ -221,6 +221,8 @@ require_once __DIR__. '/../common/include/top.php';
                     }
                 }
                 this.miningStat = miningStat
+                this.address = localStorage.getItem('address')
+                this.cpu = localStorage.getItem('cpu') || 0
             },
             methods: {
                 setupMiner() {
@@ -283,6 +285,8 @@ require_once __DIR__. '/../common/include/top.php';
                         )
                         return
                     }
+                    localStorage.setItem('address', this.address)
+                    localStorage.setItem('cpu', this.cpu)
                     this.setupMiner()
                     this.webMiner.postMessage({cmd:'checkAddress', params: {address: this.address}})
                 },
@@ -339,9 +343,12 @@ require_once __DIR__. '/../common/include/top.php';
                         return
                     }
                     localStorage.removeItem('miningStat')
+                    localStorage.removeItem('address')
+                    localStorage.removeItem('cpu')
                     this.webMiner.postMessage({cmd:'resetStat'})
                 },
                 updateMinerCpu() {
+                    localStorage.setItem('cpu', this.cpu)
                     this.webMiner.postMessage({cmd:'updateCpu', params: {cpu: this.cpu}})
                 }
             }
