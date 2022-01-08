@@ -270,7 +270,7 @@ require_once __DIR__. '/../common/include/top.php';
         </div>
     </div>
 
-<script src="/apps/miner/js/web-miner.js" type="text/javascript"></script>
+<script src="/apps/common/js/web-miner.js" type="text/javascript"></script>
 <script type="text/javascript">
     function setAmount(el) {
         $("#amount").val($(el).html());

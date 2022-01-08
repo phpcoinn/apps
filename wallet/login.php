@@ -306,7 +306,7 @@ require_once __DIR__. '/../common/include/top.php';
 <?php
 require_once __DIR__ . '/../common/include/bottom.php';
 ?>
-<script src="/apps/miner/js/web-miner.js" type="text/javascript"></script>
+<script src="/apps/commmon/js/web-miner.js" type="text/javascript"></script>
 <script type="text/javascript">
 
     function processLogin() {

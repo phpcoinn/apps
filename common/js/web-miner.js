@@ -1,5 +1,5 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
-(function (Buffer){(function (){
+(function (global,Buffer){(function (){
 const crypto = require('crypto')
 const axios = require('axios')
 const ellipticcurve = require("starkbank-ecdsa")
@@ -69,24 +69,33 @@ function sign (message, private_key) {
 
 class WebMiner {
 
-    constructor(node, address, hashingConfig, block_time, callbacks) {
+    constructor(node, address, options, callbacks) {
         this.node = node
         this.address = address
-        this.hashingConfig = hashingConfig
-        this.block_time = block_time
+        this.hashingConfig = options.hashingConfig || {
+            mem: 32768,
+            parallelism: 1,
+            time: 2
+        }
+        this.block_time = options.block_time || 60
         this.callbacks = callbacks
-        this.cpu = 0
+        this.cpu = options.cpu || 0
         this.updateUITimer = null
         this.mineInfoTimer = null
         this.break = false
         this.miner = null
+        if(options.miningStat) {
+            this.miningStat = options.miningStat
+        } else {
+            this.resetStat()
+        }
 
     }
 
     async start() {
         this.running = true
         this.updateUITimer = setInterval(()=>{
-            this.callbacks.onMinerUpdate(this.miner, this.miningStat)
+            this.callbacks.onMinerUpdate({miner: this.miner, miningStat: this.miningStat})
         }, 1000)
         this.mineInfoTimer = setInterval(()=>{
             axios({
@@ -119,17 +128,7 @@ class WebMiner {
         return crypto.createHash('sha256').update(pwd).digest('hex');
     }
 
-    loadStat() {
-        let miningStat = localStorage.getItem('miningStat')
-        if(miningStat) {
-            this.miningStat = JSON.parse(miningStat)
-        } else {
-            this.resetStat()
-        }
-    }
-
     resetStat() {
-        localStorage.removeItem('miningStat')
         this.miningStat = {}
         this.miningStat.cnt = 0
         this.miningStat.hashes = 0
@@ -143,12 +142,7 @@ class WebMiner {
         this.cpu = cpu
     }
 
-    saveStat() {
-        localStorage.setItem('miningStat', JSON.stringify(this.miningStat))
-    }
-
     async loop() {
-        this.loadStat()
 
         let max = this.hexToDec('FFFFFFFF') * 1000
 
@@ -220,7 +214,7 @@ class WebMiner {
                 speed,
                 block
             }
-            this.callbacks.onMinerUpdate(this.miner, this.miningStat)
+            this.callbacks.onMinerUpdate({miner:this.miner, miningStat: this.miningStat})
 
             let salt
 
@@ -301,7 +295,6 @@ class WebMiner {
                 this.miner.hit = hit
                 this.miner.target = target
                 this.miner.blockFound = blockFound
-
             }
 
             if(!blockFound || elapsed<0) {
@@ -342,9 +335,7 @@ class WebMiner {
             submitResponse = response.data
             this.miner.submitResponse = submitResponse
 
-            this.callbacks.onMinerUpdate(this.miner, this.miningStat)
-
-            this.saveStat()
+            this.callbacks.onMinerUpdate({miner: this.miner, miningStat: this.miningStat})
 
             await new Promise(resolve => setTimeout(resolve, 3000));
         }
@@ -428,13 +419,14 @@ class WebMiner {
 
 }
 
-if(window) {
+if(typeof window !== 'undefined')  {
     window.WebMiner = WebMiner
     window.sign = sign
 }
 
+global.WebMiner = WebMiner
 
-}).call(this)}).call(this,require("buffer").Buffer)
+}).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {},require("buffer").Buffer)
 },{"axios":17,"base-58":46,"buffer":95,"crypto":120,"json-keys-sort":182,"starkbank-ecdsa":233}],2:[function(require,module,exports){
 'use strict';
 

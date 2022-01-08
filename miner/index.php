@@ -184,11 +184,12 @@ require_once __DIR__. '/../common/include/top.php';
         <?php } ?>
 	</div>
 	<script src="/apps/miner/js/vue.js"></script>
-    <script src="/apps/miner/js/argon2-browser/lib/argon2.js"></script>
-	<script src="/apps/miner/js/web-miner.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.16.0/d3.min.js" integrity="sha512-FHsFVKQ/T1KWJDGSbrUhTJyS1ph3eRrxI228ND0EGaEp6v4a/vGwPWd3Dtd/+9cI7ccofZvl/wulICEurHN1pg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/c3/0.7.20/c3.min.js" integrity="sha512-+IpCthlNahOuERYUSnKFjzjdKXIbJ/7Dd6xvUp+7bEw0Jp2dg6tluyxLs+zq9BMzZgrLv8886T4cBSqnKiVgUw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-	<script type="text/javascript">
+
+
+
+    <script type="text/javascript">
         <?php $hashingOptions = Block::hashingOptions(Block::getHeight()+1) ?>
 
         let hashingConfig = {
@@ -212,29 +213,66 @@ require_once __DIR__. '/../common/include/top.php';
             },
             mounted() {
                 this.$el.style.visibility = 'visible'
+                let miningStat = localStorage.getItem('miningStat')
+                if(miningStat) {
+                    try {
+                        miningStat = JSON.parse(miningStat)
+                    } catch (e) {
+                    }
+                }
+                this.miningStat = miningStat
             },
             methods: {
                 setupMiner() {
-                    this.webMiner = new WebMiner(this.node,
-                        this.address, hashingConfig, <?php echo BLOCK_TIME ?> , {
-                            onMinerUpdate: (miner, miningStat)=>{
-                                this.miner = miner
-                                this.miningStat = miningStat
-                                if(miner.attempt === 0) {
-                                    this.resetChart(miner.block_date)
+
+                    this.webMiner = new Worker('/apps/common/js/worker.js?time='+Date.now());
+                    this.webMiner.addEventListener('message', (e) => {
+                        let cmd = e.data.cmd
+                        if(cmd === 'EVENT') {
+                            let event = e.data.event
+                            let data = e.data.data
+                            if(event === 'onMinerUpdate') {
+                                this.miner = data.miner
+                                this.miningStat = data.miningStat
+                                localStorage.setItem('miningStat', JSON.stringify(this.miningStat))
+                                if(data.miner.attempt === 0) {
+                                    this.resetChart(data.miner.block_date)
                                 } else {
-                                    this.updateChart(miner)
+                                    this.updateChart(data.miner)
                                 }
                             }
-                        })
+                        }
+                        if(cmd === 'checkAddressResponse') {
+                            let response = e.data.response
+                            if(!response) {
+                                Swal.fire(
+                                    {
+                                        title: 'Address not found',
+                                        text: 'You must have recorded sent transaction on blockchain in order to start mining',
+                                        icon: 'error'
+                                    }
+                                )
+                            } else {
+                                this.running = true
+                                $("#miningConfig").collapse('hide')
+                                this.webMiner.postMessage({cmd:'START'})
+                            }
+                        }
+                    }, false);
+
+                    let options = {cpu: this.cpu, hashingConfig, block_time: <?php echo BLOCK_TIME ?>, miningStat: this.miningStat}
+                    this.webMiner.postMessage({cmd:'INIT', params:{
+                            node: this.node,
+                            address: this.address,
+                            options}});
                 },
                 stopMiner() {
                     this.running = false
                     $("#miningConfig").collapse('show')
-                    this.webMiner.stop()
+                    this.webMiner.postMessage({cmd:'STOP'})
                 },
                 async startMiner() {
-                    this.address = this.address.trim()
+                    this.address = this.address && this.address.trim()
                     if(!this.address) {
                         Swal.fire(
                             {
@@ -246,20 +284,7 @@ require_once __DIR__. '/../common/include/top.php';
                         return
                     }
                     this.setupMiner()
-
-                    if(!await this.webMiner.checkAddress(this.address)) {
-                        Swal.fire(
-                            {
-                                title: 'Address not found',
-                                text: 'You must have recorded sent transaction on blockchain in order to start mining',
-                                icon: 'error'
-                            }
-                        )
-                        return
-                    }
-                    this.running = true
-                    $("#miningConfig").collapse('hide')
-                    await this.webMiner.start()
+                    this.webMiner.postMessage({cmd:'checkAddress', params: {address: this.address}})
                 },
                 resetChart(start) {
                     this.chart = c3.generate({
@@ -313,10 +338,11 @@ require_once __DIR__. '/../common/include/top.php';
                     if(!confirm('Confirm?')) {
                         return
                     }
-                    this.webMiner.resetStat()
+                    localStorage.removeItem('miningStat')
+                    this.webMiner.postMessage({cmd:'resetStat'})
                 },
                 updateMinerCpu() {
-                    this.webMiner.updateCpu(this.cpu)
+                    this.webMiner.postMessage({cmd:'updateCpu', params: {cpu: this.cpu}})
                 }
             }
         })
