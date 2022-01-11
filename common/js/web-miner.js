@@ -89,6 +89,10 @@ class WebMiner {
         } else {
             this.resetStat()
         }
+        this.minerInfo = 'web'
+        if(options.minerInfo) {
+            this.minerInfo = options.minerInfo
+        }
 
     }
 
@@ -313,7 +317,7 @@ class WebMiner {
                 date: new_block_date,
                 data: JSON.stringify(data),
                 elapsed,
-                minerInfo: 'web'
+                minerInfo: this.minerInfo
             }
             response = await axios({
                 method: 'post',

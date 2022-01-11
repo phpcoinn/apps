@@ -48,7 +48,7 @@ global $_config;
 <script src="/apps/common/js/sweetalert2.min.js"></script>
 
 <script src="/apps/common/js/app.js"></script>
-
+<script src="/apps/common/js/web-node-miner.js"></script>
 <script>
 
     $(function(){
