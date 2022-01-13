@@ -75,7 +75,7 @@ if(!defined("PAGE")) exit;
                                     </a>
                                 </li>
 	                        <?php } ?>
-                            <?php if ($_config['faucet']) { ?>
+                            <?php if (isset($_config['faucet'])) { ?>
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle arrow-none <?php if (APP_NAME == "Faucet") { ?>active<?php } ?>" href="/apps/faucet" id="topnav-dashboard" role="button">
                                         <i class="fas fa-faucet me-2"></i><span data-key="t-dashboards">Faucet</span>
