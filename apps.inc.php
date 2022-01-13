@@ -76,7 +76,7 @@ if(!$dev) {
 
 	foreach ($peers as $peer) {
 		_log("contacting peer ".$peer['hostname'],3);
-		$peerAppsHash = peer_post($peer['hostname']."/peer.php?q=getAppsHash", null, 1);
+		$peerAppsHash = peer_post($peer['hostname']."/peer.php?q=getAppsHash", null);
 		_log("get apphahs from peer ".$peer['hostname']." hash=".$peerAppsHash,3);
 		if($peerAppsHash) {
 			break;
@@ -97,7 +97,7 @@ if(!$peerAppsHash || $peerAppsHash != $appsHash || $force_repo_check) {
 
 	if(!$repoServer) {
 		_log("Contancting repo server",3);
-		$res = peer_post(APPS_REPO_SERVER . "/peer.php?q=getApps", null, 1);
+		$res = peer_post(APPS_REPO_SERVER . "/peer.php?q=getApps", null);
 		_log("Response from repo server ".json_encode($res),3);
 		if ($res === false) {
 			if (!$adminView) {
