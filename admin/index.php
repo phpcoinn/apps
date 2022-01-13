@@ -408,6 +408,7 @@ require_once __DIR__. '/../common/include/top.php';
                                 <form method="post" action="">
                                     <div class="mb-3">
                                         <label class="form-label" for="password">Node password</label>
+                                        <input type="text" class="d-none" id="username" value="<?php echo $_config['hostname'] ?>">
                                         <input type="password" class="form-control" id="password" name="password" value="" required/>
                                     </div>
                                     <div class="mt-4">
