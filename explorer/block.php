@@ -36,9 +36,9 @@ if(isset($_GET['action'])) {
 			exit;
 		}
 		$block = Block::export($id);
-		$res = Block::getFromArray($block)->verifyBlock();
+		$res = Block::getFromArray($block)->verifyBlock($error);
 		if (!$res) {
-			die("Block not valid");
+			die("Block not valid: $error");
 		}
 
 		die("Block is valid");

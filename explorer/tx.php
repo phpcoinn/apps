@@ -21,11 +21,11 @@ if(isset($_GET['action'])) {
         } else {
 		    $tx = Transaction::getById($id);
         }
-	    $res = $tx->check($tx_height);
+	    $res = $tx->verify($tx_height, $err);
 	    if($res) {
 	        die("Transaction valid");
         } else {
-	        die("Transaction not valid");
+	        die("Transaction not valid $err");
         }
     }
 }
