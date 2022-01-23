@@ -3,7 +3,7 @@ require_once dirname(__DIR__)."/apps.inc.php";
 define("PAGE", true);
 define("APP_NAME", "Explorer");
 
-$transactions = Transaction::mempool(100);
+$transactions = Transaction::mempool(100, false, false);
 
 
 

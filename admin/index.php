@@ -11,6 +11,7 @@ if(!$_config['admin']) {
 
 const APP_URL = "/apps/admin";
 session_start();
+ob_start();
 
 if(isset($_POST['action'])) {
     $action = $_POST['action'];
@@ -456,6 +457,11 @@ require_once __DIR__. '/../common/include/top.php';
                 <span>Peers</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link <?php if ($view == "mempool") { ?>active<?php } ?>" href="<?php echo APP_URL ?>/?view=mempool" role="tab" aria-selected="false">
+                <span>Mempool</span>
+            </a>
+        </li>
 	    <?php if (Nodeutil::miningEnabled() && $minepool_enabled) { ?>
             <li class="nav-item">
                 <a class="nav-link <?php if ($view == "minepool") { ?>active<?php } ?>" href="<?php echo APP_URL ?>/?view=minepool" role="tab" aria-selected="false">
@@ -763,7 +769,7 @@ require_once __DIR__. '/../common/include/top.php';
                 <form class="row gx-3 gy-2 align-items-center" method="post" action="">
                     <input type="hidden" name="action" value="blocks-hash"/>
                     <div class="col-sm-2">
-                        <input type="text" class="form-control" id="height" name="height" placeholder="Height" required="required">
+                        <input type="text" class="form-control" id="height" name="height" placeholder="Height">
                     </div>
                     <div class="col-sm-2">
                         <button type="submit" class="btn btn-info">Calculate</button>
@@ -1016,6 +1022,16 @@ require_once __DIR__. '/../common/include/top.php';
             <hr/>
             <pre style="white-space: pre-line"><?php echo $logData ?></pre>
 		<?php } ?>
+
+        <?php
+
+	    if($view == "mempool") {
+            define("ADMIN_TAB", true);
+            require_once __DIR__ ."/tabs/mempool.php";
+	    }
+
+        ?>
+
     <?php } ?>
 <?php } ?>
 
