@@ -100,6 +100,12 @@ if(isset($_GET['action'])) {
 	    header("location: ".APP_URL."/?view=config");
 	    exit;
     }
+    if($action=="offline") {
+        $value = $_GET['value'];
+        $db->setConfig("offline", $value);
+	    header("location: ".APP_URL."/?view=config");
+	    exit;
+    }
     if($action == "delete_peer") {
         $id = $_GET['id'];
         if(!empty($id)) {
@@ -926,6 +932,12 @@ require_once __DIR__. '/../common/include/top.php';
                         <input type="checkbox" class="form-check-input" id="customSwitchsizelg" <?php echo $_config['enable_logging'] ? 'checked=""' : '' ?>
                                onchange="document.location.href='<?php echo APP_URL ?>/?action=logging&value=<?php echo $_config['enable_logging'] ? 0 : 1 ?>'">
                         <label class="form-check-label" for="customSwitchsizelg">Logging</label>
+                    </div>
+
+                    <div class="form-check form-switch form-switch-lg mb-3" dir="ltr">
+                        <input type="checkbox" class="form-check-input" id="customSwitchsizelg" <?php echo $_config['offline'] ? 'checked=""' : '' ?>
+                               onchange="document.location.href='<?php echo APP_URL ?>/?action=offline&value=<?php echo $_config['offline'] ? 0 : 1 ?>'">
+                        <label class="form-check-label" for="customSwitchsizelg">Offline</label>
                     </div>
 
                     <div class="mt-4">

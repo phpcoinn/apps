@@ -36,7 +36,7 @@ function proccessLogin($public_key, $login_key, $login_code) {
 
 if(isset($_POST['login'])) {
 
-        if($_SERVER['SERVER_NAME'] !== APPS_WALLET_SERVER_NAME) {
+        if($_SERVER['SERVER_NAME'] !== APPS_WALLET_SERVER_NAME && !DEVELOPMENT) {
 	        $_SESSION['msg'] = [['icon' => 'warning', 'text' => 'Invalid server access']];
 	        header("location: /apps/wallet/login.php");
 	        exit;

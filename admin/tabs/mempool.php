@@ -4,11 +4,17 @@ if (!defined("ADMIN_TAB")) {
 	exit;
 }
 
-global $action;
+global $action, $db;
 
 if($action=="delete_tx") {
 	$id = $_GET['id'];
     Mempool::delete($id);
+	header("location: ".APP_URL."/?view=mempool");
+	exit;
+}
+
+if($action=="empty_mempool") {
+    Util::emptyMempool();
 	header("location: ".APP_URL."/?view=mempool");
 	exit;
 }
@@ -63,3 +69,5 @@ $count=count($transactions);
 		</tbody>
 	</table>
 </div>
+<a href="<?php echo APP_URL ?>/?view=mempool&action=empty_mempool" class="btn btn-danger"
+    onclick="if(!confirm('Confirm?')) return false">Clear mempool</a>

@@ -29,6 +29,7 @@ $dm=get_data_model(Account::getCountByAddress($public_key, $address),
     '/apps/explorer/address.php?address='.$address);
 
 $transactions = Account::getTransactions($address, $dm);
+$addressStat = Transaction::getAddressStat($address);
 
 $mempool = Account::getMempoolTransactions($address);
 
@@ -51,6 +52,14 @@ require_once __DIR__. '/../common/include/top.php';
     <tr>
         <td>Public key</td>
         <td><?php echo $public_key ?></td>
+    </tr>
+    <tr>
+        <td>Total received</td>
+        <td><?php if ($addressStat['total_received']) echo $addressStat['total_received'] ." (" .  $addressStat['count_received'] . ")"?></td>
+    </tr>
+    <tr>
+        <td>Total sent</td>
+        <td><?php if ($addressStat['total_sent']) echo $addressStat['total_sent']  . " (" .  $addressStat['count_sent'] .")" ?></td>
     </tr>
     <tr>
         <td class="h4">Balance</td>
