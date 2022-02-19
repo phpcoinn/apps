@@ -2,9 +2,9 @@
 
 global $_config;
 if($_config['testnet']) {
-	define("APPS_REPO_SERVER","https://repo.testnet.phpcoin.net");
+	define("APPS_REPO_SERVER","https://repo.testnet.phpcoin.net:8001");
 	define("APPS_REPO_SERVER_PUBLIC_KEY","PZ8Tyr4Nx8MHsRAGMpZmZ6TWY63dXWSCwUKtSuRJEs8RrRrkZbND1WxVNomPtvowAo5hzQr6xe2TUyHYLnzu2ubVMfBAYM4cBZJLckvxWenHB2nULzmU8VHz");
-	define("APPS_WALLET_SERVER_NAME","wallet.testnet.phpcoin.net");
+	define("APPS_WALLET_SERVER_NAME","wallet.testnet.phpcoin.net:8001");
 	define("APPS_WALLET_SERVER_PUBLIC_KEY","PZ8Tyr4Nx8MHsRAGMpZmZ6TWY63dXWSCxxo8UaTrKLceuCRRC4YopodMLvtPp31Bq1JJBmva3StkHMPa2WhgXhPyPLG9GiwEW3PwXDyroZGfNLE4ioqRtwyp");
 } else {
 	define("APPS_REPO_SERVER","https://repo.phpcoin.net");
