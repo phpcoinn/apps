@@ -203,6 +203,11 @@ if(isset($_GET['action'])) {
 	if($action == "accounts-hash") {
         $accountsHash = Nodeutil::calculateAccountsHash();
     }
+	if($action == "mn_lock_clear") {
+		@rmdir(ROOT.'/tmp/mn-lock');
+		header("location: ".APP_URL."/?view=server");
+		exit;
+    }
 }
 
 $setAdminPass = !empty($_config['admin_password']);
@@ -270,6 +275,13 @@ if($view == "server") {
     $res = shell_exec("ps aux | grep '".ROOT."/cli/miner.php' | grep -v grep");
     $miner_running = !empty(trim($res));
     $miner_lock = file_exists( ROOT.'/tmp/miner-lock');
+
+	$res = shell_exec("ps aux | grep '".ROOT."/cli/masternode.php' | grep -v grep");
+	$masternode_process_running = !empty(trim($res));
+	$masternode_process_lock = file_exists( ROOT.'/tmp/mn-lock');
+    if($masternode_process_lock) {
+	    $masternode_process_start = filemtime(ROOT.'/tmp/mn-lock');
+    }
 
 }
 if($view == "db") {
@@ -654,6 +666,44 @@ require_once __DIR__. '/../common/include/top.php';
                                     </span>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-4">
+                    <div class="card">
+                        <div class="card-header h3">
+                            <h4 class="card-title">Masternode process</h4>
+                        </div>
+                        <div class="card-body">
+                            <?php if($masternode_process_start) { ?>
+                                <p class="card-text">
+                                    Started: <?php echo display_date($masternode_process_start) ?>
+                                    <br/>
+                                    Running: <?php echo round((time() - $masternode_process_start) / 60) ?> min
+                                </p>
+                            <?php } ?>
+                            <div class="row">
+                                <div class="col-6">
+                                    Running
+                                </div>
+                                <div class="col-6 text-end">
+                                    <span class="badge bg-<?php echo $masternode_process_running ? 'success' : 'danger' ?>">
+                                        <?php echo $masternode_process_running ? 'Yes' : 'No' ?>
+                                    </span>
+                                </div>
+                                <div class="col-6">
+                                    Lock
+                                </div>
+                                <div class="col-6 text-end">
+                                    <span class="badge bg-<?php echo $masternode_process_lock ? 'success' : 'danger' ?>">
+                                        <?php echo $masternode_process_lock ? 'Yes' : 'No' ?>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparent border-top text-muted">
+                            <a class="btn btn-warning me-2" href="<?php echo APP_URL ?>/?action=mn_lock_clear" onclick="if(!confirm('Clear masternode lock?')) return false">Clear lock</a>
                         </div>
                     </div>
                 </div>

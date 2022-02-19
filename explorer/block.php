@@ -46,7 +46,7 @@ if(isset($_GET['action'])) {
 	}
 }
 
-
+$mnEnabled = Masternode::allowedMasternodes($blockCount);
 $transactions = Transaction::getForBlock($height);
 
 ?>
@@ -120,6 +120,16 @@ require_once __DIR__. '/../common/include/top.php';
                     </a>
                 </td>
             </tr>
+            <?php if($mnEnabled) { ?>
+                <tr>
+                    <td>Masternode</td>
+                    <td>
+                        <a href="/apps/explorer/address.php?address=<?php echo $block['masternode'] ?>">
+                            <?php echo $block['masternode'] ?>
+                        </a>
+                    </td>
+                </tr>
+            <?php } ?>
             <tr>
                 <td>Date</td>
                 <td>
@@ -134,6 +144,12 @@ require_once __DIR__. '/../common/include/top.php';
                 <td>Signature</td>
                 <td><?php echo $block['signature'] ?></td>
             </tr>
+            <?php if($mnEnabled) { ?>
+                <tr>
+                    <td>Masternode signature</td>
+                    <td><?php echo $block['mn_signature'] ?></td>
+                </tr>
+            <?php } ?>
             <tr>
                 <td>Difficulty</td>
                 <td><?php echo $block['difficulty'] ?></td>

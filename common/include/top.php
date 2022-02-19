@@ -82,6 +82,21 @@ if(!defined("PAGE")) exit;
                                     </a>
                                 </li>
                             <?php } ?>
+                            <?php if ($_config['testnet']) {
+
+                                $servers = ["node1", "node2", "node3", "miner1", "miner2"];
+                                foreach($servers as $server) {
+                                ?>
+
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle arrow-none <?php if ($_SERVER['SERVER_NAME'] == "$server.tesnet.phpcoin.net") { ?>active<?php } ?>" href="<?php echo "https://".$server.".testnet.phpcoin.net:8001" . $_SERVER['REQUEST_URI'] ?>" id="topnav-dashboard" role="button">
+                                            <span data-key="t-dashboards"><?php echo $server ?></span>
+                                        </a>
+                                    </li>
+                                <?php } ?>
+                            <?php } ?>
+
+
                         </ul>
                         <ul class="navbar-nav d-flex">
 	                        <?php if($_config['admin']) { ?>

@@ -47,6 +47,9 @@ if (Nodeutil::miningEnabled() && $minepool_enabled) {
 	$minepoolCount = count($rows);
 }
 
+$mnEnabled = Masternode::allowedMasternodes($blockCount);
+$masternodesCount = Masternode::getCount();
+
 ?>
 <?php
     require_once __DIR__. '/../common/include/top.php';
@@ -226,7 +229,7 @@ if (Nodeutil::miningEnabled() && $minepool_enabled) {
         <div class="card card-h-100">
             <div class="card-body">
                 <div class="row align-items-center">
-                    <div class="col-12">
+                    <div class="col-6">
                         <i class="fas fa-network-wired me-1 h4"></i>
                         <span class="text-muted mb-3 lh-1 text-truncate h4">
                             <a href="/apps/explorer/peers.php">Peers</a>
@@ -235,6 +238,17 @@ if (Nodeutil::miningEnabled() && $minepool_enabled) {
                             <?php echo $peersCount ?>
                         </h2>
                     </div>
+                    <?php if (Masternode::allowedMasternodes($blockCount)){ ?>
+                        <div class="col-6">
+                            <i class="fas fa-boxes me-1 h4"></i>
+                            <span class="text-muted mb-3 lh-1 text-truncate h4">
+                                <a href="/apps/explorer/masternodes.php">Masternodes</a>
+                            </span>
+                            <h2 class="my-2">
+                                <?php echo $masternodesCount ?>
+                            </h2>
+                        </div>
+                    <?php } ?>
                 </div>
             </div>
         </div>
@@ -257,6 +271,9 @@ if (Nodeutil::miningEnabled() && $minepool_enabled) {
                 <th>ID</th>
                 <th>Generator</th>
                 <th>Miner</th>
+                <?php if ($mnEnabled) { ?>
+                    <th>Masternode</th>
+                <?php } ?>
                 <th>Date</th>
                 <th>Difficulty</th>
                 <th>Transactions</th>
@@ -275,6 +292,9 @@ if (Nodeutil::miningEnabled() && $minepool_enabled) {
                     <td><?php echo truncate_hash($block['id']) ?></td>
                     <td><?php echo explorer_address_link2($block['generator'], true) ?></td>
                     <td><?php echo explorer_address_link2($block['miner'], true) ?></td>
+	                <?php if ($mnEnabled) { ?>
+                        <td><?php echo explorer_address_link2($block['masternode'], true) ?></td>
+                    <?php } ?>
                     <td><?php echo display_date($block['date']) ?></td>
                     <td><?php echo $block['difficulty'] ?></td>
                     <td><?php echo $block['transactions'] ?></td>
