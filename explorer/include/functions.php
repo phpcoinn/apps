@@ -131,3 +131,10 @@ function sort_column($link, $dm, $column, $name) {
 	return $s;
 }
 
+function display_short($string, $show = 12) {
+	if(!empty($string)) {
+		$string_short = substr($string, 0, $show) . "..." .substr($string, -$show);
+		return '<span title="'.$string.'">'.$string_short.'</span>';
+	}
+}
+

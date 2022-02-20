@@ -40,7 +40,7 @@ require_once __DIR__. '/../common/include/top.php';
                 <tr class="<?php if (!$valid) { ?>table-danger<?php } ?> <?php if ($valid && $next_winner) { ?>table-success<?php } ?>">
                     <td><?php echo explorer_address_pubkey($masternode['public_key']) ?></td>
                     <td><?php echo explorer_address_link($masternode['id']) ?></td>
-                    <td><?php echo $masternode['signature'] ?></td>
+                    <td><?php echo display_short($masternode['signature']) ?></td>
                     <td>
                         <a href="/apps/explorer/block.php?height=<?php echo $masternode['height'] ?>">
 			                <?php echo $masternode['height'] ?>

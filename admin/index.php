@@ -678,6 +678,31 @@ require_once __DIR__. '/../common/include/top.php';
                         <div class="card-body">
                             <?php if($masternode_process_start) { ?>
                                 <p class="card-text">
+                                    <?php if (Masternode::isLocalMasternode()) {
+
+                                        $mn = Masternode::get($_config['masternode_public_key']);
+                                        if(!$mn) {
+	                                        $valid = false;
+	                                        $err = "Masternode not found in list";
+                                        } else {
+                                            $mn = Masternode::fromDB($mn);
+                                            $height = Block::getHeight();
+                                            $valid = $mn->check($height, $err);
+                                        }
+
+                                        ?>
+
+                                        <?php if (!$valid) { ?>
+                                            <div class="alert alert-danger">
+                                                <strong>Masternode is invalid!</strong>
+                                                <br/>
+                                                <?php echo $err ?>
+                                            </div>
+                                        <?php } ?>
+
+                                        Address:  <?php echo explorer_address_link(Account::getAddress($_config['masternode_public_key'])) ?>
+                                    <?php } ?>
+                                    <br/>
                                     Started: <?php echo display_date($masternode_process_start) ?>
                                     <br/>
                                     Running: <?php echo round((time() - $masternode_process_start) / 60) ?> min
