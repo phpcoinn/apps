@@ -35,7 +35,16 @@ require_once __DIR__. '/../common/include/top.php';
         </tr>
         </thead>
         <tbody>
-            <?php foreach($rows as $key=> $row) { ?>
+            <?php foreach($rows as $key=> $row) {
+
+                if($row['end_block']) {
+                    $duration = ($row['end_block'] - $row['block'] + 1) * 60;
+                    $days = $duration / 60 / 60 / 24;
+                } else {
+	                $days = null;
+                }
+
+                ?>
                 <tr>
                     <td><?php echo $row['phase'] ?></td>
                     <td><?php echo $row['block'] ?></td>
@@ -44,7 +53,7 @@ require_once __DIR__. '/../common/include/top.php';
                     <td><?php echo $row['miner'] ?></td>
                     <td><?php echo $row['gen'] ?></td>
                     <td><?php echo $row['mn'] ?></td>
-                    <td><?php echo round($row['days'],2) ?></td>
+                    <td><?php echo $days==null ? null : round($days, 2) ?></td>
                     <td><?php echo display_date($row['time']) ?></td>
                     <td><?php if(isset($real[$key])) echo display_date($real[$key]['time'])  ?></td>
                     <td><?php echo $row['supply'] ?></td>
