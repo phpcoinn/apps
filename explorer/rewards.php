@@ -5,7 +5,7 @@ define("APP_NAME", "Explorer");
 
 $rows = Blockchain::calculateRewardsScheme(false);
 $real = Blockchain::calculateRewardsScheme(true);
-
+$height = Block::getHeight();
 ?>
 
 <?php
@@ -45,7 +45,7 @@ require_once __DIR__. '/../common/include/top.php';
                 }
 
                 ?>
-                <tr>
+                <tr class="<?php if($height >= $row['block'] && $height <= $row['end_block']) { ?>table-success<?php } ?>">
                     <td><?php echo $row['phase'] ?></td>
                     <td><?php echo $row['block'] ?></td>
                     <td><?php echo $row['end_block'] ?></td>
