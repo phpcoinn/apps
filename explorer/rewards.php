@@ -17,20 +17,23 @@ require_once __DIR__. '/../common/include/top.php';
 	<li class="breadcrumb-item active">Rewards scheme</li>
 </ol>
 
+<h3>Current block: <?php echo $height ?></h3>
 <div class="table-responsive">
     <table class="table table-sm table-striped">
         <thead class="table-light">
         <tr>
             <th>Phase</th>
+            <th>Segment</th>
             <th>Start block</th>
             <th>End block</th>
+            <th>Blocks</th>
             <th>Total reward</th>
             <th>Miner</th>
             <th>Generator</th>
             <th>Masternode</th>
             <th>Days duration</th>
-            <th>Projected time end</th>
-            <th>Real time end</th>
+            <th>Projected time start</th>
+            <th>Calculated time start</th>
             <th>Total supply</th>
         </tr>
         </thead>
@@ -47,8 +50,10 @@ require_once __DIR__. '/../common/include/top.php';
                 ?>
                 <tr class="<?php if($height >= $row['block'] && $height <= $row['end_block']) { ?>table-success<?php } ?>">
                     <td><?php echo $row['phase'] ?></td>
+                    <td><?php echo $row['segment'] ?></td>
                     <td><?php echo $row['block'] ?></td>
                     <td><?php echo $row['end_block'] ?></td>
+                    <td><?php echo $row['blocks'] ?></td>
                     <td><?php echo $row['total'] ?></td>
                     <td><?php echo $row['miner'] ?></td>
                     <td><?php echo $row['gen'] ?></td>
