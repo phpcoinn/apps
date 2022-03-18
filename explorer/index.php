@@ -211,13 +211,22 @@ $masternodesCount = Masternode::getCount();
         <div class="card card-h-100">
             <div class="card-body">
                 <div class="row align-items-center">
-                    <div class="col-12">
+                    <div class="col-6">
                         <i class="fas fa-users  me-1 h4"></i>
                         <span class="text-muted mb-3 lh-1 text-truncate h4">
                             <a href="/apps/explorer/accounts.php">Accounts</a>
                         </span>
                         <h2 class="my-2">
                             <?php echo $addressAccount  ?>
+                        </h2>
+                    </div>
+                    <div class="col-6">
+                        <i class="fas fa-network-wired me-1 h4"></i>
+                        <span class="text-muted mb-3 lh-1 text-truncate h4">
+                            <a href="/apps/explorer/peers.php">Peers</a>
+                        </span>
+                        <h2 class="my-2">
+			                <?php echo $peersCount ?>
                         </h2>
                     </div>
                 </div>
@@ -229,17 +238,8 @@ $masternodesCount = Masternode::getCount();
         <div class="card card-h-100">
             <div class="card-body">
                 <div class="row align-items-center">
-                    <div class="col-6">
-                        <i class="fas fa-network-wired me-1 h4"></i>
-                        <span class="text-muted mb-3 lh-1 text-truncate h4">
-                            <a href="/apps/explorer/peers.php">Peers</a>
-                        </span>
-                        <h2 class="my-2">
-                            <?php echo $peersCount ?>
-                        </h2>
-                    </div>
                     <?php if (Masternode::allowedMasternodes($blockCount)){ ?>
-                        <div class="col-6">
+                        <div class="col-12">
                             <i class="fas fa-boxes me-1 h4"></i>
                             <span class="text-muted mb-3 lh-1 text-truncate h4">
                                 <a href="/apps/explorer/masternodes.php">Masternodes</a>
