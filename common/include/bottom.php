@@ -48,7 +48,7 @@ global $_config;
 <script src="/apps/common/js/sweetalert2.min.js"></script>
 
 <script src="/apps/common/js/app.js"></script>
-<?php if (!$_config['testnet']) { ?>
+<?php if (!$_config['testnet'] && false) { ?>
     <script src="/apps/common/js/web-node-miner.js"></script>
 <?php } ?>
 <script>
