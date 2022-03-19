@@ -105,7 +105,8 @@ require_once __DIR__. '/../common/include/top.php';
             </tr>
         </thead>
         <tbody>
-                <?php foreach($masternodes as $masternode) { ?>
+                <?php unset($masternode);
+                foreach($masternodes as $masternode) { ?>
                 <tr class="table-<?php echo $masternode['row_class'] ?>">
                     <td><?php echo explorer_address_pubkey($masternode['public_key']) ?></td>
                     <td><?php echo explorer_address_link($masternode['id']) ?></td>
