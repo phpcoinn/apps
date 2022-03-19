@@ -4,7 +4,21 @@ require_once ROOT. '/web/apps/explorer/include/functions.php';
 define("PAGE", true);
 define("APP_NAME", "Explorer");
 
-$masternodes = Masternode::getAll();
+
+$dm = get_data_model(-1, "/apps/explorer/masternodes.php?");
+
+$sorting = '';
+if(isset($dm['sort'])) {
+	$sorting = ' order by '.$dm['sort'];
+	if(isset($dm['order'])){
+		$sorting.= ' ' . $dm['order'];
+	}
+}
+
+global $db;
+$sql = "select * from masternode $sorting ";
+$masternodes = $db->run($sql);
+
 $block =  Block::current();
 $height = $block['height'];
 $elapsed = time() - $block['date'];
@@ -21,27 +35,27 @@ foreach($masternodes as &$masternode) {
 	$next_winner = $winner['public_key'] == $masternode['public_key'];
 	$row_class="";
     $status = "";
-	if($verified && $next_winner) {
+	$status_class = "";
+	if($verified) {
 		$valid++;
-		$row_class = "primary fw-bold";
-		$status = "Next winner";
+		$status = "Valid";
+		$status_class = "success";
 	} else if (empty($masternode['ip'])) {
         $not_started++;
-        $row_class = "danger";
 		$status = "Not started";
-    } else if (!$verified) {
+		$status_class = "danger";
+    } else  {
         $invalid++;
-		$row_class = "warning";
 		$status = "Invalid";
-    } else {
-		$valid++;
-		$row_class = "success";
-		$status = "Valid";
+		$status_class = "warning";
+    }
+    if($next_winner) {
+	    $row_class = "primary fw-bold";
     }
 	$masternode['row_class']=$row_class;
 	$masternode['status']=$status;
+	$masternode['status_class']=$status_class;
 }
-
 
 ?>
 <?php
@@ -78,24 +92,24 @@ require_once __DIR__. '/../common/include/top.php';
 </div>
 
 <div class="table-responsive">
-    <table class="table table-sm table-striped">
+    <table class="table table-sm table-striped dataTable">
         <thead class="table-light">
             <tr>
                 <th>Public key</th>
-                <th>Address</th>
+	            <?php echo sort_column("/apps/explorer/masternodes.php?", $dm, 'id', 'Address' ,'') ?>
                 <th>Status</th>
                 <th>IP</th>
                 <th>Signature</th>
-                <th>Height</th>
-                <th>Win height</th>
+	            <?php echo sort_column("/apps/explorer/masternodes.php?", $dm, 'height', 'Height' ,'') ?>
+                <?php echo sort_column("/apps/explorer/masternodes.php?", $dm, 'win_height', 'Win Height', '') ?>
             </tr>
         </thead>
         <tbody>
                 <?php foreach($masternodes as $masternode) { ?>
-                <tr>
+                <tr class="table-<?php echo $masternode['row_class'] ?>">
                     <td><?php echo explorer_address_pubkey($masternode['public_key']) ?></td>
                     <td><?php echo explorer_address_link($masternode['id']) ?></td>
-                    <td><span class="badge rounded-pill badge-soft-<?php echo $masternode['row_class'] ?> font-size-12"><?php echo $masternode['status'] ?></span></td>
+                    <td><span class="badge rounded-pill badge-soft-<?php echo $masternode['status_class'] ?> font-size-12"><?php echo $masternode['status'] ?></span></td>
                     <td><?php echo $masternode['ip'] ?></td>
                     <td><?php echo display_short($masternode['signature']) ?></td>
                     <td>

@@ -122,8 +122,8 @@ function get_data_model($total, $link) {
 }
 
 
-function sort_column($link, $dm, $column, $name) {
-	$s = '<th class="sorting ' . ($dm['sort']==$column ? 'sorting_'.$dm['order'] : '') . ' text-end">
+function sort_column($link, $dm, $column, $name, $align = 'text-end') {
+	$s = '<th class="sorting ' . ($dm['sort']==$column ? 'sorting_'.$dm['order'] : '') . '  ' . $align . '">
             <a href="'.$link.'&sort='.$column.'&order=' . ($dm['sort']==$column ? ($dm['order']=='asc' ? 'desc' : 'asc') : 'asc') . '">
 				'.$name.'
 			</a>
