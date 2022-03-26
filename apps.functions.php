@@ -24,8 +24,17 @@ function calcAppsHash() {
 }
 
 function buildAppsArchive() {
-	$cmd = "cd ".ROOT." && tar -czf tmp/apps.tar.gz web/apps --owner=0 --group=0 --sort=name --mode=744 --mtime='2020-01-01 00:00:00 UTC'";
-	shell_exec($cmd);
+	$res = shell_exec("ps uax | grep 'tar -czf tmp/apps.tar.gz web/apps' | grep -v grep");
+	_log("Repo: check buildAppsArchive res=$res", 5);
+	if($res) {
+		_log("Repo: buildAppsArchive running", 5);
+		return false;
+	} else {
+		_log("Repo: buildAppsArchive call process", 5);
+		$cmd = "cd ".ROOT." && tar -czf tmp/apps.tar.gz web/apps --owner=0 --group=0 --sort=name --mode=744 --mtime='2020-01-01 00:00:00 UTC'";
+		shell_exec($cmd);
+		return true;
+	}
 }
 
 function truncate_hash($hash, $digits = 8) {

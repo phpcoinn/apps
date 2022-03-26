@@ -688,6 +688,16 @@ require_once __DIR__. '/../common/include/top.php';
                                             $mn = Masternode::fromDB($mn);
                                             $height = Block::getHeight();
                                             $valid = $mn->check($height, $err);
+
+                                            global $db;
+	                                        $sql="select count(t.id) as cnt, sum(t.val) as value, 
+                                                    (max(t.date) - min(t.date))/60/60/24 as running,
+                                                   sum(t.val)  / ((max(t.date) - min(t.date))/60/60/24) as daily
+                                            from
+                                            transactions t
+                                            where t.dst = :id
+                                            and t.type = 0 and t.message = 'masternode'";
+                                            $mnStat = $db->row($sql, [':id'=>$mn->id]);
                                         }
 
                                         ?>
@@ -701,11 +711,21 @@ require_once __DIR__. '/../common/include/top.php';
                                         <?php } ?>
 
                                         Address:  <?php echo explorer_address_link(Account::getAddress($_config['masternode_public_key'])) ?>
-                                    <?php } ?>
+
+                                        <?php if ($mnStat) { ?>
+                                            <br/>
+                                            Total rewards: <?php echo $mnStat['cnt'] ?><br/>
+                                            Total value: <?php echo $mnStat['value'] ?><br/>
+                                            Running days: <?php echo $mnStat['running'] ?><br/>
+                                            Daily income: <?php echo $mnStat['daily'] ?><br/>
+                                        <?php } ?>
+
+                                        <?php } ?>
                                     <br/>
                                     Started: <?php echo display_date($masternode_process_start) ?>
                                     <br/>
                                     Running: <?php echo round((time() - $masternode_process_start) / 60) ?> min
+                                    <br/>
                                 </p>
                             <?php } ?>
                             <div class="row">
@@ -902,6 +922,10 @@ require_once __DIR__. '/../common/include/top.php';
                         <th>Fails</th>
                         <th>Stuckfail</th>
                         <th>Reason</th>
+                        <th>Miner</th>
+                        <th>Generator</th>
+                        <th>Masternode</th>
+                        <th>Response time</th>
                         <th></th>
                     </tr>
                     </thead>
@@ -919,7 +943,20 @@ require_once __DIR__. '/../common/include/top.php';
                             <td><?php echo $peer['fails'] ?></td>
                             <td><?php echo $peer['stuckfail'] ?></td>
                             <td><?php echo $peer['blacklist_reason'] ?></td>
+                            <td><?php echo $peer['miner'] ?></td>
+                            <td><?php echo $peer['generator'] ?></td>
+                            <td><?php echo $peer['masternode'] ?></td>
                             <td>
+                                <?php
+                                $total = $peer['response_time'];
+                                $cnt = $peer['response_cnt'];
+                                if($cnt > 0) {
+                                    $avg = round($total / $cnt,3);
+                                }
+                                ?>
+                                <span title="total=<?php echo $total ?> cnt=<?php echo $cnt ?>"><?php echo $avg ?></span>
+                            </td>
+                            <td class="text-nowrap">
                                 <a class="btn btn-danger btn-xs" href="<?php echo APP_URL ?>/?action=delete_peer&id=<?php echo $peer['id']  ?>" onclick="if(!confirm('Delete peer?')) return false;">Delete</a>
                                 <a class="btn btn-warning btn-xs" href="<?php echo APP_URL ?>/?action=repeer&id=<?php echo $peer['id']  ?>&peer=<?php echo $peer['hostname'] ?>">Re-peer</a>
                             </td>

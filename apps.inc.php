@@ -1,7 +1,7 @@
 <?php
 
 require_once dirname(dirname(__DIR__)).'/include/init.inc.php';
-define("APPS_VERSION","1.0.45");
+define("APPS_VERSION","1.0.46");
 function relativePath($from, $to, $ps = DIRECTORY_SEPARATOR)
 {
 	$arFrom = explode($ps, rtrim($from, $ps));
@@ -132,14 +132,20 @@ if(!$peerAppsHash || $peerAppsHash != $appsHash || $force_repo_check) {
 }
 
 if(isRepoServer()) {
-	_log("Checking repo server update",3);
+	_log("Repo: Checking repo server update",5);
 	if($appsHash != $appsHashCalc || $appsChanged) {
 		buildAppsArchive();
 		$dir = ROOT . "/cli";
-		_log("Propagating apps",3);
-		system("php $dir/propagate.php apps $appsHashCalc > /dev/null 2>&1  &");
+		_log("Repo: Propagating apps",5);
+		$res = shell_exec("ps uax | grep '$dir/propagate.php apps' | grep -v grep");
+		if($res) {
+			_log("Repo: propagate apps running",5);
+		} else {
+			_log("Repo: propagate apps start process",5);
+			system("php $dir/propagate.php apps $appsHashCalc > /dev/null 2>&1  &");
+		}
 	} else {
-		_log("Apps not changed",3);
+		_log("Repo: Apps not changed",5);
 	}
 }
 
