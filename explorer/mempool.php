@@ -26,6 +26,7 @@ require_once __DIR__. '/../common/include/top.php';
 			<th>Src</th>
 			<th>Dst</th>
 			<th>Value</th>
+			<th>Fee</th>
 			<th>Type</th>
 			<th>Message</th>
 		</tr>
@@ -34,13 +35,16 @@ require_once __DIR__. '/../common/include/top.php';
 		<?php foreach ($transactions as $transaction) { ?>
 		<tr>
 			<td>
-				<a href="/apps/explorer/tx.php?id=<?php echo $transaction['id'] ?>"><?php echo $transaction['id'] ?></a>
+				<a href="/apps/explorer/tx.php?id=<?php echo $transaction['id'] ?>">
+                    <?php echo truncate_hash($transaction['id']) ?>
+                </a>
 			</td>
 			<td><?php echo date("Y-m-d H:i:s",$transaction['date']) ?></td>
-			<td><a href="/apps/explorer/address.php?address=<?php echo $transaction['src'] ?>"><?php echo $transaction['src'] ?></a></td>
-			<td><a href="/apps/explorer/address.php?address=<?php echo $transaction['dst'] ?>"><?php echo $transaction['dst'] ?></a></td>
+			<td><?php echo explorer_address_link2($transaction['src'], true) ?></td>
+			<td><?php echo explorer_address_link2($transaction['dst'], true) ?></td>
 			<td><?php echo $transaction['val'] ?></td>
-			<td><?php echo $transaction['type'] ?></td>
+			<td><?php echo $transaction['fee'] ?></td>
+			<td><?php echo TransactionTypeLabel($transaction['type']) ?></td>
 			<td style="word-break: break-all"><?php echo $transaction['message'] ?></td>
 		</tr>
 		<?php } ?>

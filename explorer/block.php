@@ -190,13 +190,13 @@ require_once __DIR__. '/../common/include/top.php';
                 <th>Src</th>
                 <th>Dst</th>
                 <th class="text-end">Value</th>
-<!--                <th>Fee</th>-->
+                <th>Fee</th>
                 <th>Type</th>
                 <th>Date</th>
             </tr>
         </thead>
         <?php foreach ($transactions as $tx) {
-            if($tx['type'] == TX_TYPE_REWARD) {
+            if($tx['type'] == TX_TYPE_REWARD || $tx['type'] == TX_TYPE_FEE) {
 	            $src = null;
             } else {
 	            $src = Account::getAddress($tx['public_key']);
@@ -205,16 +205,16 @@ require_once __DIR__. '/../common/include/top.php';
             ?>
             <tbody>
                 <tr>
-                    <td><a href="/apps/explorer/tx.php?id=<?php echo $tx['id'] ?>"><?php echo $tx['id'] ?><a/></td>
+                    <td><a href="/apps/explorer/tx.php?id=<?php echo $tx['id'] ?>"><?php echo truncate_hash($tx['id']) ?><a/></td>
                     <td>
-                        <?php if($src) { ?>
-                            <a href="/apps/explorer/address.php?address=<?php echo $src ?>"><?php echo $src ?></a>
-                        <?php } ?>
+                        <?php if($src) {
+                            echo explorer_address_link2($src, true);
+                        } ?>
                     </td>
-                    <td><a href="/apps/explorer/address.php?address=<?php echo $tx['dst'] ?>"><?php echo $tx['dst'] ?></a></td>
+                    <td><?php echo explorer_address_link2($tx['dst'], true); ?></td>
                     <td class="text-end"><?php echo num($tx['val']) ?></td>
-<!--                    <td>--><?php //echo num($tx['fee']) ?><!--</td>-->
-                    <td><?php echo $tx['type_label'] ?></td>
+                    <td><?php echo num($tx['fee']) ?></td>
+                    <td><?php echo TransactionTypeLabel($tx['type']) ?></td>
                     <td><?php echo display_date($tx['date']) ?></td>
                 </tr>
             </tbody>

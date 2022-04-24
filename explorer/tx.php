@@ -63,7 +63,7 @@ require_once __DIR__. '/../common/include/top.php';
             <td><?php echo $tx['date'] ?></td>
         </tr>
         <?php
-        if($tx['type']==TX_TYPE_REWARD) {
+        if($tx['type']==TX_TYPE_REWARD || $tx['type']==TX_TYPE_FEE) {
             $src= null;
         } else {
             $src = Account::getAddress($tx['public_key']);
@@ -83,7 +83,7 @@ require_once __DIR__. '/../common/include/top.php';
         </tr>
         <tr>
             <td>Type</td>
-            <td><?php echo $tx['type'] ?></td>
+            <td><?php echo TransactionTypeLabel($tx['type']) ?> (<?php echo $tx['type'] ?>)</td>
         </tr>
         <tr>
             <td>Value</td>

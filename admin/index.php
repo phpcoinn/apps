@@ -339,7 +339,15 @@ if($view == "log") {
     $logData = shell_exec($cmd);
 }
 if($view == "peers") {
-    $peers = Peer::getAll();
+	$dm = get_data_model(-1, "/apps/admin/?view=peers");
+	$sorting = '';
+	if(isset($dm['sort'])) {
+		$sorting = ' order by '.$dm['sort'];
+		if(isset($dm['order'])){
+			$sorting.= ' ' . $dm['order'];
+		}
+	}
+    $peers = Peer::getAll($sorting);
 }
 
 //TODO: $minepool_enabled = Minepool::enabled();
@@ -908,14 +916,14 @@ require_once __DIR__. '/../common/include/top.php';
 
             <h4>Peers</h4>
             <div class="table-responsive">
-                <table class="table table-sm table-striped">
-                    <thead>
+                <table class="table table-sm table-striped dataTable">
+                    <thead class="table-light">
                     <tr>
                         <th>Id</th>
                         <th>Hostname</th>
-                        <th>Blacklisted</th>
-                        <th>Ping</th>
-                        <th>Height</th>
+	                    <?php echo sort_column("/apps/admin/index.php?view=peers", $dm, 'blacklisted', 'Blacklisted' ,'') ?>
+	                    <?php echo sort_column("/apps/admin/index.php?view=peers", $dm, 'ping', 'Ping' ,'') ?>
+	                    <?php echo sort_column("/apps/admin/index.php?view=peers", $dm, 'height', 'Height' ,'') ?>
                         <th>Reserve</th>
                         <th>Ip</th>
                         <th>Version</th>

@@ -87,7 +87,7 @@ require_once __DIR__. '/../common/include/top.php';
             <tbody>
 			<?php foreach($mempool as $transaction) {
                 $party = "";
-                if($transaction['type'] != TX_TYPE_REWARD) {
+                if($transaction['type'] != TX_TYPE_REWARD && $transaction['type'] != TX_TYPE_FEE) {
                     if ($address == $transaction['dst']) {
                         $party = Account::getAddress($transaction['public_key']);
                     } else {
@@ -132,13 +132,13 @@ require_once __DIR__. '/../common/include/top.php';
             <th>Type</th>
             <th>Value</th>
 <!--            <th>Message</th>-->
-<!--            <th>Fee</th>-->
+            <th>Fee</th>
         </tr>
     </thead>
     <tbody>
         <?php foreach($transactions as $transaction) {
 	        $party="";
-            if($transaction['type'] != TX_TYPE_REWARD) {
+            if($transaction['type'] != TX_TYPE_REWARD && $transaction['type'] != TX_TYPE_FEE) {
                 if ($address == $transaction['dst']) {
                     $party = Account::getAddress($transaction['public_key']);
                 } else {
@@ -159,9 +159,11 @@ require_once __DIR__. '/../common/include/top.php';
                         <?php echo truncate_hash($transaction['block']) ?></a></td>
                 <td><a href="/apps/explorer/address.php?address=<?php echo $party ?>">
 			            <?php echo truncate_hash($party) ?></a></td>
-                <td><?php echo $transaction['type_label'] ?></td>
-                <td class="<?php echo $transaction['sign']=='-' ? 'text-danger' : 'text-success' ?>"><?php echo $transaction['sign'] .  num($transaction['val']) ?></td>
-<!--                <td>--><?php //echo num($transaction['fee']) ?><!--</td>-->
+                <td><?php echo TransactionTypeLabel($transaction['type']) ?></td>
+                <td class="<?php echo $transaction['sign']=='-' ? 'text-danger' : 'text-success' ?>">
+                    <?php echo $transaction['sign'] .  num($transaction['val']) ?>
+                </td>
+                <td><?php echo num($transaction['fee']) ?></td>
 <!--                <td style="word-break: break-all">--><?php //echo $transaction['message'] ?><!--</td>-->
             </tr>
     <?php } ?>

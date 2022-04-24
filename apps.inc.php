@@ -72,7 +72,7 @@ _log("READ GIT: ".$cmd, 5);
 
 if(!$dev) {
 	$peers = Peer::getActive();
-	_log("get random peers: ".json_encode($peers),3);
+	//_log("get random peers: ".json_encode($peers),3);
 	$peerAppsHash = false;
 	foreach ($peers as $peer) {
 		_log("contacting peer ".$peer['hostname'],3);

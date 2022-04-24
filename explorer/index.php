@@ -33,8 +33,8 @@ $peersCount = Peer::getCount();
 $hashRate10 = round(Blockchain::getHashRate(10),2);
 $hashRate100 = round(Blockchain::getHashRate(100),2);
 
-$avgBlockTime10 = BlockChain::getAvgBlockTime(10);
-$avgBlockTime100 = BlockChain::getAvgBlockTime(100);
+$avgBlockTime10 = Blockchain::getAvgBlockTime(10);
+$avgBlockTime100 = Blockchain::getAvgBlockTime(100);
 
 $last = Block::getAtHeight($blockCount);
 $elapsed = time() - $last['date'];

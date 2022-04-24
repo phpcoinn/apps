@@ -38,6 +38,9 @@ function buildAppsArchive() {
 }
 
 function truncate_hash($hash, $digits = 8) {
+	if(empty($hash)) {
+		return null;
+	}
 	$thash = substr($hash, 0, $digits) . "..." . substr($hash, -$digits);
 	return '<span data-bs-toggle="tooltip" title="'.$hash.'">' . $thash . '</span>';
 }
@@ -48,4 +51,22 @@ function explorer_address_link2($address, $short= false) {
 		$text  = truncate_hash($address);
 	}
 	return '<a target="_blank" href="/apps/explorer/address.php?address='.$address.'">'.$text.'</a>';
+}
+
+function TransactionTypeLabel($type) {
+	//TODO: next-version - replace with Transaction::typeLabel
+	switch ($type) {
+		case TX_TYPE_REWARD:
+			return "Reward";
+		case TX_TYPE_SEND:
+			return "Transfer";
+		case TX_TYPE_MN_CREATE:
+			return "Create masternode";
+		case TX_TYPE_MN_REMOVE:
+			return "Remove masternode";
+		case TX_TYPE_FEE:
+			return "Fee";
+		case TX_TYPE_SC_CREATE:
+			return "Create smart contract";
+	}
 }
