@@ -3,6 +3,9 @@
 if(!defined("PAGE")) exit;
 
 $peers = Peer::getAll();
+usort($peers, function($p1, $p2) {
+    return strcmp($p2['hostname'], $p1['hostname']);
+})
 ?>
 <!doctype html>
 <html lang="en">
@@ -97,6 +100,11 @@ $peers = Peer::getAll();
         table.dataTable > thead .sorting_asc_disabled:before,
         table.dataTable > thead .sorting_desc_disabled:after {
             opacity: 0; }
+
+        #peers-menu {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
     </style>
 </head>
 
@@ -160,7 +168,7 @@ $peers = Peer::getAll();
                                 <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-pages" role="button">
                                     <i class="fas fa-network-wired me-2"></i><span data-key="t-peers">Peers</span> <div class="arrow-down"></div>
                                 </a>
-                                <div class="dropdown-menu" aria-labelledby="topnav-pages">
+                                <div class="dropdown-menu" aria-labelledby="topnav-pages" id="peers-menu">
                                     <?php foreach($peers as $peer) { ?>
                                         <a href="<?php echo $peer['hostname'] . $_SERVER['REQUEST_URI'] ?>" class="dropdown-item <?php if ($peer['ip'] == $_SERVER['SERVER_ADDR']) { ?>active<?php } ?>" data-key="t-calendar"><?php echo $peer['hostname'] ?></a>
                                     <?php } ?>
