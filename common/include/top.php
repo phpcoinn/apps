@@ -2,7 +2,7 @@
 
 if(!defined("PAGE")) exit;
 
-
+$peers = Peer::getAll();
 ?>
 <!doctype html>
 <html lang="en">
@@ -155,21 +155,17 @@ if(!defined("PAGE")) exit;
                                     </a>
                                 </li>
                             <?php } ?>
-                            <?php if ($_config['testnet']) {
 
-                                $servers = ["node1", "node2", "node3", "miner1", "miner2"];
-                                foreach($servers as $server) {
-                                ?>
-
-                                    <li class="nav-item dropdown">
-                                        <a class="nav-link dropdown-toggle arrow-none <?php if ($_SERVER['SERVER_NAME'] == "$server.testnet.phpcoin.net") { ?>active<?php } ?>" href="<?php echo "https://".$server.".testnet.phpcoin.net:8001" . $_SERVER['REQUEST_URI'] ?>" id="topnav-dashboard" role="button">
-                                            <span data-key="t-dashboards"><?php echo $server ?></span>
-                                        </a>
-                                    </li>
-                                <?php } ?>
-                            <?php } ?>
-
-
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle arrow-none" href="#" id="topnav-pages" role="button">
+                                    <i class="fas fa-network-wired me-2"></i><span data-key="t-peers">Peers</span> <div class="arrow-down"></div>
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="topnav-pages">
+                                    <?php foreach($peers as $peer) { ?>
+                                        <a href="<?php echo $peer['hostname'] . $_SERVER['REQUEST_URI'] ?>" class="dropdown-item <?php if ($peer['ip'] == $_SERVER['SERVER_ADDR']) { ?>active<?php } ?>" data-key="t-calendar"><?php echo $peer['hostname'] ?></a>
+                                    <?php } ?>
+                                </div>
+                            </li>
                         </ul>
                         <ul class="navbar-nav d-flex">
 	                        <?php if($_config['admin']) { ?>
