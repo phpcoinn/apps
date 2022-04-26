@@ -2,7 +2,7 @@
 
 if(!defined("PAGE")) exit;
 
-$peers = Peer::getAll();
+$peers = Peer::getPeersForSync();
 usort($peers, function($p1, $p2) {
     return strcmp($p2['hostname'], $p1['hostname']);
 })
@@ -23,6 +23,19 @@ usort($peers, function($p1, $p2) {
     <link href="/apps/common/css/sweetalert2.min.css" rel="stylesheet" type="text/css" />
     <!-- Icons Css -->
     <link href="/apps/common/css/icons.min.css" rel="stylesheet" type="text/css" />
+
+    <?php
+    if (defined("HEAD_CSS")) {
+        $headCss = HEAD_CSS;
+        if(!is_array($headCss)) {
+            $headCss = [$headCss];
+        }
+        foreach($headCss as $item) {
+            echo '<link href="'.$item.'" rel="stylesheet" type="text/css" />';
+        }
+    }
+    ?>
+
     <!-- App Css-->
     <link href="/apps/common/css/app.min.css" id="app-style" rel="stylesheet" type="text/css" />
 

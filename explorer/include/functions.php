@@ -5,7 +5,7 @@ function explorer_address_link($address, $short= false) {
 	if($short) {
 		$text  = truncate_hash($address);
 	}
-	return '<a target="_blank" href="/apps/explorer/address.php?address='.$address.'">'.$text.'</a>';
+	return '<a href="/apps/explorer/address.php?address='.$address.'">'.$text.'</a>';
 }
 function explorer_address_pubkey($pubkey, $show = 12) {
 	if(!empty($pubkey)) {
@@ -32,7 +32,7 @@ function explorer_tx_link($id, $short=false) {
 	return '<a href="/apps/explorer/tx.php?id='.$id.'" '.($short?'title="'.$id.'" data-bs-toggle="tooltip"':'').'>'.$text.'</a>';
 }
 
-function get_data_model($total, $link) {
+function get_data_model($total, $link, $default_sorting = "") {
 	$rowsPerPage = 10;
 	$pages = ceil($total / $rowsPerPage);
 	$page = 1;
@@ -46,7 +46,7 @@ function get_data_model($total, $link) {
 		$page = $pages;
 	}
 
-	$sorting = '';
+	$sorting_query = '';
 	if(isset($_GET['sort'])) {
 		$sort = $_GET['sort'];
 		if(isset($_GET['order'])) {
@@ -54,7 +54,13 @@ function get_data_model($total, $link) {
 		} else {
 			$order = 'asc';
 		}
-		$sorting = '&sort='.$sort.'&order='.$order;
+		$sorting_query = '&sort='.$sort.'&order='.$order;
+	}
+
+	$search = null;
+	if(isset($_GET['search'])) {
+		$search = $_GET['search'];
+		$search_query = http_build_query(["search"=>$search]);
 	}
 
 	$startPage = $page - 2;
@@ -77,12 +83,12 @@ function get_data_model($total, $link) {
 		if ($page > 1) {
 			$paginator .= ' 
  				<li class="page-item">
-                    <a class="page-link" href="' . $link . '&page=1' . $sorting . '" aria-label="First">
+                    <a class="page-link" href="' . $link . '&page=1' . $sorting_query . '&'.$search_query.'" aria-label="First">
                         <span aria-hidden="true">First</span>
                     </a>
                 <li>
                 <li class="page-item">
-                    <a class="page-link" href="' . $link . '&page=' . ($page - 1) . '' . $sorting . '" aria-label="Previous">
+                    <a class="page-link" href="' . $link . '&page=' . ($page - 1) . '' . $sorting_query . '&'.$search_query.'" aria-label="Previous">
                         <span aria-hidden="true">Previous</span>
                     </a>
                 </li>';
@@ -90,18 +96,18 @@ function get_data_model($total, $link) {
 		for ($i = $startPage; $i <= $endPage; $i++) {
 			$paginator .= '
 				<li class="page-item ' . (($i == $page) ? 'active' : '') . '">
-                    <a class="page-link" href="' . $link . '&page=' . $i . '' . $sorting . '">' . $i . '</a>
+                    <a class="page-link" href="' . $link . '&page=' . $i . '' . $sorting_query . '&'.$search_query.'">' . $i . '</a>
                 </li>';
 		}
 		if ($page < $pages) {
 			$paginator .= '
 				<li class="page-item">
-                    <a class="page-link" href="' . $link . '&page=' . ($page + 1) . '' . $sorting . '" aria-label="Next">
+                    <a class="page-link" href="' . $link . '&page=' . ($page + 1) . '' . $sorting_query . '&'.$search_query.'" aria-label="Next">
                         <span aria-hidden="true">Next</span>
                     </a>
                 <li>
                 <li class="page-item">
-                    <a class="page-link" href="' . $link . '&page=' . $pages . '' . $sorting . '" aria-label="Next">
+                    <a class="page-link" href="' . $link . '&page=' . $pages . '' . $sorting_query . '&'.$search_query.'" aria-label="Next">
                         <span aria-hidden="true">Last</span>
                     </a>
                 </li>';
@@ -111,20 +117,33 @@ function get_data_model($total, $link) {
 	</div>
 	';
 
+	$start = ($page-1)*$rowsPerPage;
+
+	$sorting = $default_sorting;
+	if(isset($_GET['sort'])) {
+		$sorting = ' order by '.$_GET['sort'];
+		if(isset($_GET['order'])){
+			$sorting.= ' ' . $_GET['order'];
+		}
+	}
 
 	return [
 		'page'=>$page,
 		'limit'=>$rowsPerPage,
 		'paginator'=>$paginator,
 		'sort'=>$sort,
-		'order'=>$order
+		'order'=>$order,
+		'search'=>$search,
+		'start'=>$start,
+		'sorting'=>$sorting,
+		"search_query"=>$search_query
 	];
 }
 
 
 function sort_column($link, $dm, $column, $name, $align = 'text-end') {
 	$s = '<th class="sorting ' . ($dm['sort']==$column ? 'sorting_'.$dm['order'] : '') . '  ' . $align . '">
-            <a href="'.$link.'&sort='.$column.'&order=' . ($dm['sort']==$column ? ($dm['order']=='asc' ? 'desc' : 'asc') : 'asc') . '">
+            <a href="'.$link.'&sort='.$column.'&order=' . ($dm['sort']==$column ? ($dm['order']=='asc' ? 'desc' : 'asc') : 'asc') . '&'.$dm['search_query'].'">
 				'.$name.'
 			</a>
         </th>';

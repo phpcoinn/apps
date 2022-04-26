@@ -350,8 +350,7 @@ if($view == "peers") {
     $peers = Peer::getAll($sorting);
 }
 
-//TODO: $minepool_enabled = Minepool::enabled();
-$minepool_enabled = (isset($_config['minepool']) && $_config['minepool']);
+$minepool_enabled = Minepool::enabled();
 
 ?>
 

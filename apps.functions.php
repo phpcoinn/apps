@@ -54,19 +54,5 @@ function explorer_address_link2($address, $short= false) {
 }
 
 function TransactionTypeLabel($type) {
-	//TODO: next-version - replace with Transaction::typeLabel
-	switch ($type) {
-		case TX_TYPE_REWARD:
-			return "Reward";
-		case TX_TYPE_SEND:
-			return "Transfer";
-		case TX_TYPE_MN_CREATE:
-			return "Create masternode";
-		case TX_TYPE_MN_REMOVE:
-			return "Remove masternode";
-		case TX_TYPE_FEE:
-			return "Fee";
-		case TX_TYPE_SC_CREATE:
-			return "Create smart contract";
-	}
+	return Transaction::typeLabel($type);
 }
