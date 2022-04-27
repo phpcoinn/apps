@@ -56,3 +56,14 @@ function explorer_address_link2($address, $short= false) {
 function TransactionTypeLabel($type) {
 	return Transaction::typeLabel($type);
 }
+
+function AccountgetCountByAddress($id) {
+	//TODO: replace with Account::getCountByAddress
+	global $db;
+	$res = $db->single(
+		"SELECT count(*) as cnt FROM transactions 
+				WHERE dst=:dst or src=:src",
+		[":src" => $id, ":dst" => $id]
+	);
+	return $res;
+}

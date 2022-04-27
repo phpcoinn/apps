@@ -81,7 +81,7 @@ if(isset($_SESSION['public_key'])) {
 	$public_key = $_SESSION['public_key'];
 	$address = Account::getAddress($public_key);
 	$balance = Account::pendingBalance($address);
-	$total = Account::getCountByAddress($public_key, $address);
+	$total = AccountgetCountByAddress($address);
 	$dm = get_data_model($total, "/apps/wallet/index.php?");
 	$transactions = Transaction::getWalletTransactions($address, $dm);
 }
