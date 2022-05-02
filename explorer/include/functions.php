@@ -60,6 +60,13 @@ function get_data_model($total, $link, $default_sorting = "") {
 	$search = null;
 	if(isset($_GET['search'])) {
 		$search = $_GET['search'];
+		if(is_array($search)) {
+			foreach ($search as $key => &$val) {
+				if(!is_array($val)) {
+					$val = trim($val);
+				}
+			}
+		}
 		$search_query = http_build_query(["search"=>$search]);
 	}
 

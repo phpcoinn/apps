@@ -5,19 +5,29 @@ define("PAGE", true);
 define("APP_NAME", "Explorer");
 
 
-$dm = get_data_model(-1, "/apps/explorer/masternodes.php?");
+$dm = get_data_model(-1, "/apps/explorer/masternodes.php?", "order by win_height asc");
 
-$sorting = '';
-if(isset($dm['sort'])) {
-	$sorting = ' order by '.$dm['sort'];
-	if(isset($dm['order'])){
-		$sorting.= ' ' . $dm['order'];
-	}
+$sorting = $dm['sorting'];
+
+$search = $dm['search'];
+
+$condition = '';
+$params = [];
+if(!empty($search['masternode'])) {
+	$condition .= " where m.ip = :ip or m.id = :id or m.public_key = :public_key or p.hostname=:hostname";
+	$params['ip']=$search['masternode'];
+	$params['id']=$search['masternode'];
+	$params['public_key']=$search['masternode'];
+	$params['hostname']=$search['masternode'];
 }
 
 global $db, $_config;
-$sql = "select * from masternode $sorting ";
-$masternodes = $db->run($sql);
+$sql = "select m.*, p.hostname
+from masternode m
+    left join peers p on (m.ip = p.ip)
+    $condition
+    $sorting ";
+$masternodes = $db->run($sql, $params);
 
 $block =  Block::current();
 $height = $block['height'];
@@ -98,6 +108,17 @@ require_once __DIR__. '/../common/include/top.php';
     </div>
 </div>
 
+<form class="row my-3" method="get" action="">
+    <div class="col-lg-4">
+        <input type="text" class="form-control p-1" placeholder="Address, IP, Public key" name="search[masternode]"
+               value="<?php echo $dm['search']['masternode']?>">
+    </div>
+    <div class="col-lg-2">
+        <button type="submit" class="btn btn-primary btn-sm">Search</button>
+        <a href="/apps/explorer/masternodes.php" class="btn btn-outline-primary btn-sm">Clear</a>
+    </div>
+</form>
+
 <div class="table-responsive">
     <table class="table table-sm table-striped dataTable">
         <thead class="table-light">
@@ -105,7 +126,7 @@ require_once __DIR__. '/../common/include/top.php';
                 <th>Public key</th>
 	            <?php echo sort_column("/apps/explorer/masternodes.php?", $dm, 'id', 'Address' ,'') ?>
                 <th>Status</th>
-                <th>IP</th>
+                <th>IP / Hostname</th>
                 <th>Signature</th>
 	            <?php echo sort_column("/apps/explorer/masternodes.php?", $dm, 'height', 'Height' ,'') ?>
                 <?php echo sort_column("/apps/explorer/masternodes.php?", $dm, 'win_height', 'Win Height', '') ?>
@@ -123,14 +144,24 @@ require_once __DIR__. '/../common/include/top.php';
                             <span class="badge rounded-pill badge-soft-secondary font-size-12">Local</span>
                         <?php } ?>
                     </td>
-                    <td><?php echo $masternode['ip'] ?></td>
+                    <td>
+                        <?php if(!empty($masternode['hostname'])) { ?>
+                            <a href="<?php echo $masternode['hostname'] ?>" title="<?php echo $masternode['ip'] ?>"><?php echo $masternode['hostname'] ?></a>
+                        <?php } else { ?>
+                            <?php echo $masternode['ip'] ?>
+                        <?php } ?>
+                    </td>
                     <td><?php echo display_short($masternode['signature']) ?></td>
                     <td>
                         <a href="/apps/explorer/block.php?height=<?php echo $masternode['height'] ?>">
 			                <?php echo $masternode['height'] ?>
                         </a>
                     </td>
-                    <td><?php echo $masternode['win_height'] ?></td>
+                    <td>
+                        <a href="/apps/explorer/block.php?height=<?php echo $masternode['win_height'] ?>">
+		                    <?php echo $masternode['win_height'] ?>
+                        </a>
+                    </td>
                 </tr>
             <?php } ?>
         </tbody>
