@@ -15,7 +15,7 @@ if(isset($dm['sort'])) {
 	}
 }
 
-global $db;
+global $db, $_config;
 $sql = "select * from masternode $sorting ";
 $masternodes = $db->run($sql);
 
@@ -24,6 +24,12 @@ $height = $block['height'];
 $elapsed = time() - $block['date'];
 
 $winner = Masternode::getWinner($height+1);
+
+if (Masternode::isLocalMasternode()) {
+	$publicKey = $_config['masternode_public_key'];
+	$local_id = Account::getAddress($publicKey);
+}
+
 
 $total = count($masternodes);
 $valid = 0;
@@ -55,6 +61,7 @@ foreach($masternodes as &$masternode) {
 	$masternode['row_class']=$row_class;
 	$masternode['status']=$status;
 	$masternode['status_class']=$status_class;
+    $masternode['local']=$local_id == $dbMasternode->id;
 }
 
 ?>
@@ -110,7 +117,12 @@ require_once __DIR__. '/../common/include/top.php';
                 <tr class="table-<?php echo $masternode['row_class'] ?>">
                     <td><?php echo explorer_address_pubkey($masternode['public_key']) ?></td>
                     <td><?php echo explorer_address_link($masternode['id']) ?></td>
-                    <td><span class="badge rounded-pill badge-soft-<?php echo $masternode['status_class'] ?> font-size-12"><?php echo $masternode['status'] ?></span></td>
+                    <td>
+                        <span class="badge rounded-pill badge-soft-<?php echo $masternode['status_class'] ?> font-size-12"><?php echo $masternode['status'] ?></span>
+                        <?php if ($masternode['local']) { ?>
+                            <span class="badge rounded-pill badge-soft-secondary font-size-12">Local</span>
+                        <?php } ?>
+                    </td>
                     <td><?php echo $masternode['ip'] ?></td>
                     <td><?php echo display_short($masternode['signature']) ?></td>
                     <td>
