@@ -80,7 +80,7 @@ require_once __DIR__. '/../common/include/top.php';
                 <th>From/To</th>
                 <th>Type</th>
                 <th>Value</th>
-<!--                <th>Fee</th>-->
+                <th>Fee</th>
                 <th>Message</th>
             </tr>
             </thead>
@@ -110,7 +110,7 @@ require_once __DIR__. '/../common/include/top.php';
 			                <?php echo $party ?></a></td>
                     <td><?php echo $transaction['type_label'] ?></td>
                     <td><?php echo num($transaction['val']) ?></td>
-<!--                    <td>--><?php //echo num($transaction['fee']) ?><!--</td>-->
+                    <td><?php echo num($transaction['fee']) ?></td>
                     <td style="word-break: break-all"><?php echo $transaction['message'] ?></td>
                 </tr>
 			<?php } ?>
@@ -163,7 +163,7 @@ require_once __DIR__. '/../common/include/top.php';
                 <td class="<?php echo $transaction['sign']=='-' ? 'text-danger' : 'text-success' ?>">
                     <?php echo $transaction['sign'] .  num($transaction['val']) ?>
                 </td>
-                <td><?php echo num($transaction['fee']) ?></td>
+                <td><?php echo !empty(floatval($transaction['fee'])) ? num($transaction['fee']) : '' ?></td>
 <!--                <td style="word-break: break-all">--><?php //echo $transaction['message'] ?><!--</td>-->
             </tr>
     <?php } ?>

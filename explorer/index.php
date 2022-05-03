@@ -48,6 +48,7 @@ if (Nodeutil::miningEnabled() && $minepool_enabled) {
 
 $mnEnabled = Masternode::allowedMasternodes($blockCount);
 $masternodesCount = Masternode::getCount();
+$fee = Blockchain::getFee();
 
 ?>
 <?php
@@ -173,6 +174,9 @@ $masternodesCount = Masternode::getCount();
                         <h2 class="my-2">
                             <?php echo $txCount  ?>
                         </h2>
+                        <div class="text-nowrap">
+                            <span class="ms-1 text-muted font-size-13">Fee <?php echo number_format($fee,5) ?></span>
+                        </div>
                     </div>
                 </div>
             </div>

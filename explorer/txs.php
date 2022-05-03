@@ -7,7 +7,7 @@ require_once ROOT. '/web/apps/explorer/include/functions.php';
 function getConditions($search) {
 	$condition = "";
 	$params = [];
-	if(isset($search['type'])) {
+	if(isset($search['type']) && strlen($search['type']) > 0) {
 		$condition .= " and type in (:list)";
 		$list = implode(",", $search['type']);
 		$params[":list"]=$list;
@@ -25,7 +25,7 @@ function getConditions($search) {
 	    $params[':src']=$search['src'];
     }
     if(isset($search['dst']) && !empty($search['dst'])) {
-        $condition = " and src like :dst ";
+        $condition = " and dst like :dst ";
 	    $params[':dst']=$search['dst'];
     }
     return [$condition, $params];
@@ -90,6 +90,7 @@ require_once __DIR__. '/../common/include/top.php';
             <option value="<?php echo TX_TYPE_SEND ?>" <?php if(in_array(TX_TYPE_SEND,$dm['search']['type'])) { ?> selected<?php } ?>>Transfer</option>
             <option value="<?php echo TX_TYPE_MN_CREATE ?>" <?php if(in_array(TX_TYPE_MN_CREATE,$dm['search']['type'])) { ?> selected<?php } ?>>Create masternode</option>
             <option value="<?php echo TX_TYPE_MN_REMOVE ?>" <?php if(in_array(TX_TYPE_MN_REMOVE,$dm['search']['type'])) { ?> selected<?php } ?>>Remove masternode</option>
+            <option value="<?php echo TX_TYPE_FEE ?>" <?php if(in_array(TX_TYPE_FEE,$dm['search']['type'])) { ?> selected<?php } ?>>Fee</option>
         </select>
     </div>
     <div class="col-lg-2 text-end">
@@ -124,7 +125,7 @@ require_once __DIR__. '/../common/include/top.php';
 				<td><?php echo explorer_address_link($tx['dst'], true) ?></td>
 				<td><?php echo TransactionTypeLabel($tx['type']) ?></td>
 				<td class="text-end"><?php echo $tx['val'] ?></td>
-				<td class="text-end"><?php echo $tx['fee'] ?></td>
+				<td class="text-end"><?php echo !empty(floatval($tx['fee'])) ? $tx['fee'] : '' ?></td>
 		<?php } ?>
 		</tbody>
 	</table>

@@ -23,6 +23,7 @@ require_once __DIR__. '/../common/include/top.php';
 		<tr>
 			<th>Id</th>
 			<th>Date</th>
+			<th>Height</th>
 			<th>Src</th>
 			<th>Dst</th>
 			<th>Value</th>
@@ -40,6 +41,7 @@ require_once __DIR__. '/../common/include/top.php';
                 </a>
 			</td>
 			<td><?php echo date("Y-m-d H:i:s",$transaction['date']) ?></td>
+			<td><?php echo $transaction['height'] ?></td>
 			<td><?php echo explorer_address_link2($transaction['src'], true) ?></td>
 			<td><?php echo explorer_address_link2($transaction['dst'], true) ?></td>
 			<td><?php echo $transaction['val'] ?></td>

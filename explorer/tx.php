@@ -5,8 +5,11 @@ define("APP_NAME", "Explorer");
 $id = $_GET['id'];
 $tx = Transaction::get_transaction($id);
 $tx_height = $tx['height'];
+$fee_ratio = Blockchain::getFee($tx_height);
+$mempool = false;
 if(!$tx) {
 	$tx = Transaction::getMempoolById($id);
+	$mempool = true;
     if(!$tx) {
         header("location: /apps/explorer");
         exit;
@@ -18,6 +21,7 @@ if(isset($_GET['action'])) {
 	    $tx = Transaction::getMempoolById($id);
 	    if($tx) {
 		    $tx = Transaction::getFromArray($tx);
+		    $tx->mempool = true;
         } else {
 		    $tx = Transaction::getById($id);
         }
@@ -91,7 +95,12 @@ require_once __DIR__. '/../common/include/top.php';
         </tr>
         <tr>
             <td>Fee</td>
-            <td><?php echo $tx['fee'] ?></td>
+            <td>
+                <?php echo $tx['fee'] ?>
+                <?php if($mempool) { ?>
+                    (<?php echo number_format($fee_ratio,5) ?>)
+                <?php } ?>
+            </td>
         </tr>
         <tr>
             <td>Message</td>

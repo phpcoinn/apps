@@ -38,6 +38,7 @@ $count=count($transactions);
 			<th>Src</th>
 			<th>Dst</th>
 			<th>Value</th>
+			<th>Fee</th>
 			<th>Type</th>
 			<th>Message</th>
 			<th>Peer</th>
@@ -56,6 +57,7 @@ $count=count($transactions);
 				<td><a href="/apps/explorer/address.php?address=<?php echo $transaction['src'] ?>"><?php echo $transaction['src'] ?></a></td>
 				<td><a href="/apps/explorer/address.php?address=<?php echo $transaction['dst'] ?>"><?php echo $transaction['dst'] ?></a></td>
 				<td><?php echo $transaction['val'] ?></td>
+				<td><?php echo $transaction['fee'] ?></td>
 				<td><?php echo $transaction['type'] ?></td>
 				<td style="word-break: break-all"><?php echo $transaction['message'] ?></td>
 				<td><?php echo $transaction['peer'] ?></td>

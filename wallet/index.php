@@ -43,7 +43,7 @@ if(isset($_POST['action'])) {
 		$verify = Account::checkSignature($info, $signature, $public_key);
 		if($verify) {
 
-			$transaction = new Transaction($public_key,$dst,$val,TX_TYPE_SEND,$date,$msg);
+			$transaction = new Transaction($public_key,$dst,$val,TX_TYPE_SEND,$date,$msg, $fee);
 			$transaction->signature = $signature;
 			$hash = $transaction->addToMemPool($error);
             if($hash === false) {
@@ -92,7 +92,7 @@ if(!$loggedIn) {
 
 $accPublicKey = Account::publicKey($address);
 
-
+$feeRatio = Blockchain::getFee();
 
 ?>
 <?php
@@ -229,19 +229,30 @@ require_once __DIR__. '/../common/include/top.php';
                             <label class="form-label">Receiver address:</label>
                             <input type="text" name="dst" id="dst" value="" class="form-control" required>
                         </div>
-                        <div class="mt-3">
-                            <label class="form-label">
-                                Amount:
-                            </label>
-                            <div class="float-end text-muted">Available:
-                                <a href="#" onclick="setAmount(this); return false;"><?php echo $balance ?></a>
+                        <div class="mt-3 row">
+                            <div class="col-8">
+                                <label class="form-label">
+                                    Amount:
+                                </label>
+                                <div class="float-end text-muted">Available:
+                                    <a href="#" onclick="setAmount(this); return false;"><?php echo $balance ?></a>
+                                </div>
+                                <input type="text" id="amount" name="amount" value="" class="form-control" required/>
                             </div>
-                            <input type="text" id="amount" name="amount" value="" class="form-control" required/>
+                            <div class="col-4">
+                                <label class="form-label">
+                                    Fee:
+                                </label>
+                                <div class="float-end text-muted">Fee:
+                                    <?php echo number_format($feeRatio, 5) ?>
+                                </div>
+                                <input type="text" id="fee" name="fee" value="" class="form-control" required/>
+                            </div>
                             <input type="hidden" name="action" value="send"/>
                             <input type="hidden" name="signature" id="signature" value=""/>
                             <input type="hidden" name="public_key" id="public_key" value="<?php echo $public_key ?>"/>
-                            <input type="hidden" name="fee" id="fee" value="<?php echo TX_FEE ?>"/>
                             <input type="hidden" name="date" id="date" value=""/>
+                            <input type="hidden" name="feeRatio" id="feeRatio" value="<?php echo $feeRatio ?>"/>
                         </div>
                             <div class="mt-3">
                                 <label class="form-label">
@@ -274,6 +285,7 @@ require_once __DIR__. '/../common/include/top.php';
 <script type="text/javascript">
     function setAmount(el) {
         $("#amount").val($(el).html());
+        calculateFee($(el).html());
     }
     function processSend() {
         try {
@@ -307,6 +319,13 @@ require_once __DIR__. '/../common/include/top.php';
 require_once __DIR__ . '/../common/include/bottom.php';
 ?>
 <script type="text/javascript">
+
+    function calculateFee(amount) {
+        let feeRatio = $("#feeRatio").val()
+        let fee = Number(amount * feeRatio).toFixed(8)
+        $("#fee").val(fee)
+    }
+
     $(function(){
         $('#sendModal').on('show.bs.modal', function (e) {
             if(localStorage.getItem('privateKey')) {
@@ -324,6 +343,11 @@ require_once __DIR__ . '/../common/include/bottom.php';
             $("#private_key").val(localStorage.getItem('privateKey'))
             $("#private-key-row").show()
         }
+
+        $("#amount").on('change', function(el){
+            let amount = el.target.value
+            calculateFee(amount)
+        })
     })
 
     window.addEventListener("beforeunload", function(event) {
