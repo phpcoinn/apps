@@ -7,7 +7,7 @@ require_once ROOT. '/web/apps/explorer/include/functions.php';
 function getConditions($search) {
 	$condition = "";
 	$params = [];
-	if(isset($search['type']) && strlen($search['type']) > 0) {
+	if(isset($search['type']) && is_array($search['type']) && count($search['type'])>0) {
 		$condition .= " and type in (:list)";
 		$list = implode(",", $search['type']);
 		$params[":list"]=$list;
