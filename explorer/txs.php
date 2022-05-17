@@ -86,11 +86,13 @@ require_once __DIR__. '/../common/include/top.php';
                 id="choices-type" name="search[type][]"
                 multiple>
             <option value="">Type</option>
-            <option value="<?php echo TX_TYPE_REWARD ?>" <?php if(in_array(TX_TYPE_REWARD,$dm['search']['type'])) { ?> selected<?php } ?>>Reward</option>
-            <option value="<?php echo TX_TYPE_SEND ?>" <?php if(in_array(TX_TYPE_SEND,$dm['search']['type'])) { ?> selected<?php } ?>>Transfer</option>
-            <option value="<?php echo TX_TYPE_MN_CREATE ?>" <?php if(in_array(TX_TYPE_MN_CREATE,$dm['search']['type'])) { ?> selected<?php } ?>>Create masternode</option>
-            <option value="<?php echo TX_TYPE_MN_REMOVE ?>" <?php if(in_array(TX_TYPE_MN_REMOVE,$dm['search']['type'])) { ?> selected<?php } ?>>Remove masternode</option>
-            <option value="<?php echo TX_TYPE_FEE ?>" <?php if(in_array(TX_TYPE_FEE,$dm['search']['type'])) { ?> selected<?php } ?>>Fee</option>
+            <option value="<?php echo TX_TYPE_REWARD ?>" <?php if(isset($dm['search']['type']) && in_array(TX_TYPE_REWARD,$dm['search']['type'])) { ?> selected<?php } ?>>Reward</option>
+            <option value="<?php echo TX_TYPE_SEND ?>" <?php if(isset($dm['search']['type']) && in_array(TX_TYPE_SEND,$dm['search']['type'])) { ?> selected<?php } ?>>Transfer</option>
+            <option value="<?php echo TX_TYPE_MN_CREATE ?>" <?php if(isset($dm['search']['type']) && in_array(TX_TYPE_MN_CREATE,$dm['search']['type'])) { ?> selected<?php } ?>>Create masternode</option>
+            <option value="<?php echo TX_TYPE_MN_REMOVE ?>" <?php if(isset($dm['search']['type']) && in_array(TX_TYPE_MN_REMOVE,$dm['search']['type'])) { ?> selected<?php } ?>>Remove masternode</option>
+            <option value="<?php echo TX_TYPE_FEE ?>" <?php if(isset($dm['search']['type']) && in_array(TX_TYPE_FEE,$dm['search']['type'])) { ?> selected<?php } ?>>Fee</option>
+<!--            <option value="--><?php //echo TX_TYPE_SC_CREATE ?><!--" --><?php //if(isset($dm['search']['type']) && in_array(TX_TYPE_SC_CREATE,$dm['search']['type'])) { ?><!-- selected--><?php //} ?><!-->Create Smart Contract</option>-->
+<!--            <option value="--><?php //echo TX_TYPE_SC_EXEC ?><!--" --><?php //if(isset($dm['search']['type']) && in_array(TX_TYPE_SC_EXEC,$dm['search']['type'])) { ?><!-- selected--><?php //} ?><!-->Execute Smart Contract</option>-->
         </select>
     </div>
     <div class="col-lg-2 text-end">
