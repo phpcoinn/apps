@@ -59,7 +59,7 @@ global $_config;
         <?php foreach ($_SESSION['msg'] as $msg) { ?>
         Swal.fire(
             {
-                text: '<?php echo $msg['text'] ?>',
+                text: '<?php echo str_replace("\n", "<br/>", $msg['text']) ?>',
                 icon: '<?php echo $msg['icon'] ?>'
             }
         );
