@@ -87,7 +87,14 @@ require_once __DIR__. '/../common/include/top.php';
         </tr>
         <tr>
             <td>Type</td>
-            <td><?php echo TransactionTypeLabel($tx['type']) ?> (<?php echo $tx['type'] ?>)</td>
+            <td>
+                <?php echo TransactionTypeLabel($tx['type']) ?> (<?php echo $tx['type'] ?>)
+                <?php
+                if($tx['type']==TX_TYPE_SC_CREATE) {
+                    echo '<a href="/apps/explorer/smart_contract.php?id='.$tx['dst'].'">More info</a>';
+                }
+                ?>
+            </td>
         </tr>
         <tr>
             <td>Value</td>
@@ -114,7 +121,41 @@ require_once __DIR__. '/../common/include/top.php';
             <td>Signature</td>
             <td><?php echo $tx['signature'] ?></td>
         </tr>
+        <tr>
+            <td>Data</td>
+            <td style="word-break: break-all"><?php echo $tx['data'] ?></td>
+        </tr>
     </table>
+
+    <?php if ($tx['type']==TX_TYPE_SC_EXEC) {
+        $sc_data = json_decode(base64_decode($tx['message']), true);
+        if(!is_array($sc_data['params'])) {
+	        $sc_data['params'] = [$sc_data['params']];
+        }
+        ?>
+        <h3>Smart Contract</h3>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped">
+                <tr>
+                    <td>Contract</td>
+                    <td>
+                        <a href="/apps/explorer/smart_contract.php?id=<?php echo $tx['dst'] ?>">
+                            <?php echo $tx['dst'] ?>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Method</td>
+                    <td><?php echo $sc_data['method'] ?></td>
+                </tr>
+                <tr>
+                    <td>Params</td>
+                    <td><?php echo implode("<br/>", $sc_data['params']) ?></td>
+                </tr>
+            </table>
+        </div>
+    <?php } ?>
+
 </div>
     <a href="<?php echo $_SERVER['PHP_SELF'] ?>?id=<?php echo $tx['id'] ?>&action=check" class="btn btn-info">Check</a>
 <?php

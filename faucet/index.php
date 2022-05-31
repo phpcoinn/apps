@@ -14,20 +14,23 @@ if(!(isset($_config['faucet']) && $_config['faucet'] && !empty($_config['faucet_
 $faucetAddress = Account::getAddress($_config['faucet_public_key']);
 $faucetBalance = Account::getBalance($faucetAddress);
 
-global $db;
+global $db, $_config;
 
 if(isset($_POST['action'])) {
-	$captcha = $_POST['captcha'];
-	if(empty($captcha)) {
-		$_SESSION['msg']=[['icon'=>'error', 'text'=>'Image text not entered']];
-		header("location: /apps/faucet/index.php");
-		exit;
-	}
 
-	if(!isset($_SESSION['captcha_text']) || $_SESSION['captcha_text'] != $captcha) {
-		$_SESSION['msg']=[['icon'=>'error', 'text'=>'Image text is not correct']];
-		header("location: /apps/faucet/index.php");
-		exit;
+    if(!$_config['testnet']) {
+        $captcha = $_POST['captcha'];
+        if (empty($captcha)) {
+            $_SESSION['msg'] = [['icon' => 'error', 'text' => 'Image text not entered']];
+            header("location: /apps/faucet/index.php");
+            exit;
+        }
+
+        if (!isset($_SESSION['captcha_text']) || $_SESSION['captcha_text'] != $captcha) {
+            $_SESSION['msg'] = [['icon' => 'error', 'text' => 'Image text is not correct']];
+            header("location: /apps/faucet/index.php");
+            exit;
+        }
     }
 
     $address = $_POST['address'];
@@ -75,21 +78,22 @@ if(isset($_POST['action'])) {
 		exit;
 	}
 
+    if(!$_config['testnet']) {
+	    $height = Block::getHeight();
+	    $check_height = $height - 60;
+	    $sql = "select count(*) as cnt from transactions t where t.message =:msg and t.height > :height";
+	    $row = $db->row($sql, [":msg" => $ipArgon, ":height" => $check_height]);
+	    $cnt = $row['cnt'];
 
-    $height = Block::getHeight();
-	$check_height = $height - 60;
-    $sql="select count(*) as cnt from transactions t where t.message =:msg and t.height > :height";
-    $row = $db->row($sql, [":msg"=> $ipArgon, ":height" => $check_height]);
-    $cnt = $row['cnt'];
-
-    if($cnt > 0) {
-        _log("Faucet: attempt to use faucet for address $address from IP $ip. tx in blockchain", 3);
-	    $_SESSION['msg']=[['icon'=>'error', 'text'=>'Not allowed use of faucet from same IP address for 60 blocks']];
-	    header("location: /apps/faucet/index.php");
-	    exit;
+	    if ($cnt > 0) {
+		    _log("Faucet: attempt to use faucet for address $address from IP $ip. tx in blockchain", 3);
+		    $_SESSION['msg'] = [['icon' => 'error', 'text' => 'Not allowed use of faucet from same IP address for 60 blocks']];
+		    header("location: /apps/faucet/index.php");
+		    exit;
+	    }
     }
 
-    $val = 0.01;
+    $val = $_config['testnet'] ? 50 : 0.01;
 	$fee = 0;
 	$msg = $ipArgon;
 	$date = time();
@@ -127,23 +131,25 @@ require_once __DIR__. '/../common/include/top.php';
                         <input type="text" id="address" name="address" class="form-control" value=""/>
                         <input type="hidden" name="action" value="faucet"/>
                     </div>
-                    <div class="mb-1">
-                        <label>Enter text from image</label>
-                        <div class="row">
-                            <div class="col-4">
-                                <img src="captcha.php" id="captcha_img"/>
-                            </div>
-                            <div class="col-1">
-                                <button type="button" class="btn btn-soft-dark waves-effect waves-light"
-                                    onclick="refreshCaptcha()" title="Refresh image" data-bs-toggle="tooltip">
-                                    <i class="fas fa-redo font-size-16 align-middle"></i>
-                                </button>
-                            </div>
-                            <div class="col-4">
-                                <input type="text" id="captcha" name="captcha" class="form-control" value=""/>
+                    <?php if (!$_config['testnet']) { ?>
+                        <div class="mb-1">
+                            <label>Enter text from image</label>
+                            <div class="row">
+                                <div class="col-4">
+                                    <img src="captcha.php" id="captcha_img"/>
+                                </div>
+                                <div class="col-1">
+                                    <button type="button" class="btn btn-soft-dark waves-effect waves-light"
+                                        onclick="refreshCaptcha()" title="Refresh image" data-bs-toggle="tooltip">
+                                        <i class="fas fa-redo font-size-16 align-middle"></i>
+                                    </button>
+                                </div>
+                                <div class="col-4">
+                                    <input type="text" id="captcha" name="captcha" class="form-control" value=""/>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    <?php } ?>
                 </div>
                 <div class="card-footer bg-transparent border-top text-muted">
                     <button type="submit" class="btn btn-success">Receive</button>
