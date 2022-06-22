@@ -8,9 +8,8 @@ function getConditions($search) {
 	$condition = "";
 	$params = [];
 	if(isset($search['type']) && is_array($search['type']) && count($search['type'])>0) {
-		$condition .= " and type in (:list)";
 		$list = implode(",", $search['type']);
-		$params[":list"]=$list;
+		$condition .= " and type in ($list)";
 	}
     if(isset($search['date']['from']) && !empty($search['date']['from'])) {
 	    $condition.= " and date >= :dateFrom ";
@@ -21,11 +20,11 @@ function getConditions($search) {
 	    $params[":dateTo"]=strtotime($search['date']['to']);
     }
     if(isset($search['src']) && !empty($search['src'])) {
-        $condition = " and src like :src ";
+        $condition.= " and src like :src ";
 	    $params[':src']=$search['src'];
     }
     if(isset($search['dst']) && !empty($search['dst'])) {
-        $condition = " and dst like :dst ";
+        $condition.= " and dst like :dst ";
 	    $params[':dst']=$search['dst'];
     }
     return [$condition, $params];
