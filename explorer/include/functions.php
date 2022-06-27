@@ -164,3 +164,9 @@ function display_short($string, $show = 12) {
 	}
 }
 
+function daemon_get_status($daemon) {
+	$cmd = "php ".ROOT."/cli/$daemon.php --daemon status";
+	$res = shell_exec($cmd);
+	return json_decode($res, true);
+}
+

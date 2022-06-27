@@ -24,9 +24,10 @@ if($page > $pages) {
 }
 
 $blocks = Block::getAll($page, $rowsPerPage);
-$txCount = Transaction::getCount();
-$mempoolCount = Transaction::getMempoolCount();
-$addressAccount = Account::getCount();
+$tableCounts = Nodeutil::getTableRowsCount();
+$txCount = $tableCounts['transactions'];
+$mempoolCount = $tableCounts['mempool'];
+$addressAccount = $tableCounts['accounts'];
 $circulation = Account::getCirculation();
 $peersCount = Peer::getCount();
 
