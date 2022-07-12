@@ -34,7 +34,7 @@ function TransactiongetCount() {
 	global $db;
     list($condition, $params) = getConditions($_GET['search']);
 
-	$sql="select count(*) as cnt from transactions where 1 $condition";
+	$sql="select count(*) as cnt from transactions where type >= 0 $condition";
 	$row = $db->row($sql, $params);
 	return $row['cnt'];
 }
