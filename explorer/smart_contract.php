@@ -66,7 +66,7 @@ require_once __DIR__. '/../common/include/top.php';
             <?php foreach ($state as $name => $val) { ?>
                 <tr>
                     <td><?php echo $name ?></td>
-                    <td><?php echo $val ?></td>
+                    <td><?php echo is_array($val) ? print_r($val, 1) : $val ?></td>
                 </tr>
             <?php } ?>
         </tbody>
