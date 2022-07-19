@@ -74,7 +74,7 @@ _log("READ GIT: ".$cmd, 5);
 
 $allow_insecure_apps = isset($_config['allow_insecure_apps']) && isset($_config['allow_insecure_apps']);
 
-if(!$allow_insecure_apps) {
+if(!$allow_insecure_apps && $appsChanged) {
 	$peers = Peer::getActive();
 	//_log("get random peers: ".json_encode($peers),3);
 	$peerAppsHash = false;
