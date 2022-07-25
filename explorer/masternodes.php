@@ -44,8 +44,9 @@ if (Masternode::isLocalMasternode()) {
 $total = count($masternodes);
 $valid = 0;
 $invalid = 0;
-$not_started = 0;
-foreach($masternodes as &$masternode) {
+$inactive = 0;
+$filtered_mns = [];
+foreach($masternodes as $masternode) {
 	$dbMasternode = Masternode::fromDB($masternode);
 	$verified = $dbMasternode->verify($height+1);
 	$next_winner = $winner['public_key'] == $masternode['public_key'];
@@ -57,8 +58,8 @@ foreach($masternodes as &$masternode) {
 		$status = "Valid";
 		$status_class = "success";
 	} else if (empty($masternode['ip'])) {
-        $not_started++;
-		$status = "Not started";
+        $inactive++;
+		$status = "Inactive";
 		$status_class = "danger";
     } else  {
         $invalid++;
@@ -72,7 +73,12 @@ foreach($masternodes as &$masternode) {
 	$masternode['status']=$status;
 	$masternode['status_class']=$status_class;
     $masternode['local']=$local_id == $dbMasternode->id;
+    if(isset($search['show_inactive']) || $status != "Inactive") {
+	    $filtered_mns[]=$masternode;
+    }
 }
+
+$masternodes=$filtered_mns;
 
 ?>
 <?php
@@ -94,7 +100,7 @@ require_once __DIR__. '/../common/include/top.php';
 <div class="d-flex mb-2">
     <div class="flex-grow-1 d-flex">
         <div class="ms-2">
-            <div class="badge rounded-pill badge-soft-danger font-size-16 fw-medium"><?php echo $not_started ?></div> Not started
+            <div class="badge rounded-pill badge-soft-danger font-size-16 fw-medium"><?php echo $inactive ?></div> Inactive
         </div>
         <div class="ms-2">
             <div class="badge rounded-pill badge-soft-success font-size-16 fw-medium"><?php echo $valid ?></div> Valid
@@ -116,6 +122,13 @@ require_once __DIR__. '/../common/include/top.php';
     <div class="col-lg-2">
         <button type="submit" class="btn btn-primary btn-sm">Search</button>
         <a href="/apps/explorer/masternodes.php" class="btn btn-outline-primary btn-sm">Clear</a>
+    </div>
+    <div class="mt-2">
+        <div class="form-check">
+            <input type="checkbox" class="form-check-input" name="search[show_inactive]" id="show_inactive" onclick="this.form.submit()"
+                <?php if (isset($search['show_inactive'])) { ?>checked="checked"<?php } ?>>
+            <label class="form-check-label" for="show_inactive">Show inactive</label>
+        </div>
     </div>
 </form>
 
