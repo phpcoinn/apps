@@ -219,19 +219,25 @@ if(isset($_GET['view'])) {
 	$view = "server";
 }
 if($view == "db") {
-    $dbData['connection']=$_config['db_connect'];
-    $dbData['driver'] = substr($_config['db_connect'], 0, strpos($_config['db_connect'], ":"));
-    $db_name=substr($_config['db_connect'], strrpos($_config['db_connect'], "dbname=")+7);
-    $dbData['db_name']=$db_name;
-    if($dbData['driver'] === "mysql") {
-        $dbData['server'] = shell_exec("mysql --version");
-    } else if ($dbData['driver'] === "sqlite") {
-        $version = $db->single("select sqlite_version();");
-        $dbData['server'] = $version;
-    }
-    $rowCounts = Nodeutil::getTableRowsCount();
-    foreach ($rowCounts as $table => $cnt) {
-	    $dbData['tables'][$table]=$cnt;
+	//TODO: replace @1.0.6.85
+    if(method_exists(Nodeutil::class, "getDbData")) {
+	    $dbData = Nodeutil::getDbData();
+    } else {
+        $dbData['connection']=$_config['db_connect'];
+        $dbData['driver'] = substr($_config['db_connect'], 0, strpos($_config['db_connect'], ":"));
+        $db_name=substr($_config['db_connect'], strrpos($_config['db_connect'], "dbname=")+7);
+        $dbData['db_name']=$db_name;
+        if($dbData['driver'] === "mysql") {
+            $dbData['server'] = shell_exec("mysql --version");
+        } else if ($dbData['driver'] === "sqlite") {
+            $version = $db->single("select sqlite_version();");
+            $dbData['server'] = $version;
+        }
+        $rowCounts = Nodeutil::getTableRowsCount();
+        foreach ($rowCounts as $table => $cnt) {
+            $dbData['tables'][$table]=$cnt;
+        }
+	    $dbData['dbversion']=$_config['dbversion'];
     }
 }
 if($view == "utils") {
@@ -265,12 +271,17 @@ if($view == "update") {
     $updateData['appsHash']['valid']=$validHash;
 }
 if($view == "log") {
-    $log_file = $_config['log_file'];
-    if(substr($log_file, 0, 1)!= "/") {
-        $log_file = ROOT . "/" .$log_file;
+	//TODO: replace @1.0.6.85
+    if(method_exists(Nodeutil::class, "getLogData")) {
+	    $logData = Nodeutil::getLogData();
+    } else {
+        $log_file = $_config['log_file'];
+        if(substr($log_file, 0, 1)!= "/") {
+            $log_file = ROOT . "/" .$log_file;
+        }
+        $cmd = "tail -n 100 $log_file";
+        $logData = shell_exec($cmd);
     }
-    $cmd = "tail -n 100 $log_file";
-    $logData = shell_exec($cmd);
 }
 if($view == "peers") {
 	$dm = get_data_model(-1, "/apps/admin/?view=peers");
@@ -467,7 +478,7 @@ require_once __DIR__. '/../common/include/top.php';
                     </div>
                     <div class="flex-row d-flex justify-content-between flex-wrap">
                         <label>DB version:</label>
-                        <div><?php echo $_config['dbversion'] ?></div>
+                        <div><?php echo $dbData['dbversion'] ?></div>
                     </div>
                     <hr/>
                     <?php foreach ($dbData['tables'] as $table => $rows) { ?>

@@ -165,6 +165,10 @@ function display_short($string, $show = 12) {
 }
 
 function daemon_get_status($daemon) {
+	//TODO: replace @1.0.6.85
+	if(method_exists(Daemon::class, "getDaemonStatus")) {
+		return Daemon::getDaemonStatus($daemon);
+	}
 	$cmd = "php ".ROOT."/cli/$daemon.php --daemon status";
 	$res = shell_exec($cmd);
 	return json_decode($res, true);
