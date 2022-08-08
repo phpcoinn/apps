@@ -40,13 +40,16 @@ require_once __DIR__. '/../common/include/top.php';
 	                $blacklisted_cnt++;
                     continue;
                 }
+                $latest_version = version_compare($peer['version'], VERSION.".".BUILD_VERSION) == 0;
                 ?>
                 <tr>
                     <td><a href="<?php echo $peer['hostname'] ?>" target="_blank"><?php echo $peer['hostname'] ?></a></td>
                     <td><?php echo $peer['ip'] ?></td>
                     <td><?php echo display_date($peer['ping']) ?></td>
                     <td><?php echo $peer['height'] ?></td>
-                    <td><?php echo $peer['version'] ?></td>
+                    <td>
+                        <span class="<?php if (!$latest_version) { ?>text-danger<?php } ?>"><?php echo $peer['version'] ?></span>
+                    </td>
                     <td class="">
                         <?php if($peer['appshash']) { ?>
                             <?php echo truncate_hash($peer['appshash']) ?>

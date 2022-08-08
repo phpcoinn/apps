@@ -48,6 +48,12 @@ if (Nodeutil::miningEnabled() && $minepool_enabled) {
 }
 
 $mnEnabled = Masternode::allowedMasternodes($blockCount);
+
+//TODO: replace with Masternode:getActiveCount();
+$sql="select count(1) from masternode m where m.signature is not null";
+$masternodeActiveCount = $db->single($sql);
+
+
 $masternodesCount = Masternode::getCount();
 $fee = Blockchain::getFee();
 
@@ -73,7 +79,7 @@ $fee = Blockchain::getFee();
                     </div>
                 </div>
                 <div class="text-nowrap">
-                    <span class="ms-1 text-muted font-size-13">Last block before <strong><?php echo $elapsed ?></strong> seconds</span>
+                    <span class="text-muted font-size-13">Last block before <strong><?php echo $elapsed ?></strong> seconds</span>
                 </div>
             </div>
         </div>
@@ -95,7 +101,7 @@ $fee = Blockchain::getFee();
                             <span><?php echo $avgBlockTime10 ?></span>
                         </h2>
                         <div class="text-nowrap">
-                            <span class="ms-1 text-muted font-size-13">last 10 blocks</span>
+                            <span class="text-muted font-size-13">last 10 blocks</span>
                         </div>
                     </div>
                     <div class="col-6">
@@ -103,7 +109,7 @@ $fee = Blockchain::getFee();
                             <span><?php echo $avgBlockTime100 ?></span>
                         </h2>
                         <div class="text-nowrap">
-                            <span class="ms-1 text-muted font-size-13">last 100 blocks</span>
+                            <span class="text-muted font-size-13">last 100 blocks</span>
                         </div>
                     </div>
                 </div>
@@ -126,7 +132,7 @@ $fee = Blockchain::getFee();
                             <span><?php echo $hashRate10 ?></span>
                         </h2>
                         <div class="text-nowrap">
-                            <span class="ms-1 text-muted font-size-13">last 10 blocks</span>
+                            <span class="text-muted font-size-13">last 10 blocks</span>
                         </div>
                     </div>
                     <div class="col-6">
@@ -134,7 +140,7 @@ $fee = Blockchain::getFee();
                             <span><?php echo $hashRate100 ?></span>
                         </h2>
                         <div class="text-nowrap">
-                            <span class="ms-1 text-muted font-size-13">last 100 blocks</span>
+                            <span class="text-muted font-size-13">last 100 blocks</span>
                         </div>
                     </div>
                 </div>
@@ -157,7 +163,7 @@ $fee = Blockchain::getFee();
                     </div>
                 </div>
                 <div class="text-nowrap">
-                    <span class="ms-1 text-muted font-size-13">Total supply <strong><?php echo num(TOTAL_SUPPLY) ?></strong></span>
+                    <span class="text-muted font-size-13">Total supply <strong><?php echo num(TOTAL_SUPPLY) ?></strong></span>
                 </div>
             </div>
         </div>
@@ -176,7 +182,7 @@ $fee = Blockchain::getFee();
                             <?php echo $txCount  ?>
                         </h2>
                         <div class="text-nowrap">
-                            <span class="ms-1 text-muted font-size-13">Fee <?php echo number_format($fee,5) ?></span>
+                            <span class="text-muted font-size-13">Fee <?php echo number_format($fee,5) ?></span>
                         </div>
                     </div>
                 </div>
@@ -251,8 +257,11 @@ $fee = Blockchain::getFee();
                                 <a href="/apps/explorer/masternodes.php">Masternodes</a>
                             </span>
                             <h2 class="my-2">
-                                <?php echo $masternodesCount ?>
+                                <?php echo $masternodeActiveCount ?>
                             </h2>
+                            <div class="text-nowrap">
+                                <span class="text-muted font-size-13">Total <strong><?php echo $masternodesCount ?></strong> masternodes</span>
+                            </div>
                         </div>
                     <?php } ?>
                 </div>
