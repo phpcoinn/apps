@@ -42,7 +42,7 @@ require_once __DIR__. '/../common/include/top.php';
                 }
                 $color = '';
                 $latest_version = version_compare($peer['version'], VERSION.".".BUILD_VERSION) >= 0;
-                $blocked_version = version_compare($peer['version'], MIN_VERSION.".".BUILD_VERSION) <= 0;
+                $blocked_version = version_compare($peer['version'], MIN_VERSION) < 0;
                 $color = $latest_version ? 'success' : ($blocked_version ? 'danger' : '');
                 ?>
                 <tr>
