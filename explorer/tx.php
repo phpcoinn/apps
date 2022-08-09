@@ -127,7 +127,7 @@ require_once __DIR__. '/../common/include/top.php';
         </tr>
     </table>
 
-    <?php if ($tx['type']==TX_TYPE_SC_EXEC || $tx['type']==TX_TYPE_SC_SEND) {
+    <?php if ($tx['type']==TX_TYPE_SC_EXEC) {
         $sc_data = json_decode(base64_decode($tx['message']), true);
         if(!is_array($sc_data['params'])) {
 	        $sc_data['params'] = [$sc_data['params']];
