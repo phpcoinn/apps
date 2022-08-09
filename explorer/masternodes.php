@@ -139,7 +139,7 @@ require_once __DIR__. '/../common/include/top.php';
                 <th>Public key</th>
 	            <?php echo sort_column("/apps/explorer/masternodes.php?", $dm, 'id', 'Address' ,'') ?>
                 <th>Status</th>
-                <th>IP / Hostname</th>
+	            <?php echo sort_column("/apps/explorer/masternodes.php?", $dm, 'inet_aton(m.ip)', 'IP' ,'') ?>
                 <th>Signature</th>
 	            <?php echo sort_column("/apps/explorer/masternodes.php?", $dm, 'height', 'Height' ,'') ?>
                 <?php echo sort_column("/apps/explorer/masternodes.php?", $dm, 'win_height', 'Win Height', '') ?>
@@ -159,7 +159,7 @@ require_once __DIR__. '/../common/include/top.php';
                     </td>
                     <td>
                         <?php if(!empty($masternode['hostname'])) { ?>
-                            <a href="<?php echo $masternode['hostname'] ?>" title="<?php echo $masternode['ip'] ?>"><?php echo $masternode['hostname'] ?></a>
+                            <a href="<?php echo $masternode['hostname'] ?>" title="<?php echo $masternode['hostname'] ?>"><?php echo $masternode['ip'] ?></a>
                         <?php } else { ?>
                             <?php echo $masternode['ip'] ?>
                         <?php } ?>
