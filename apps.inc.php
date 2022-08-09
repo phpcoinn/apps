@@ -34,7 +34,6 @@ function isRepoServer() {
 _log("Checking apps integrity", 4);
 $appsHashFile = Nodeutil::getAppsHashFile();
 $appsChanged = false;
-$appsHashCalc = calcAppsHash();
 if(!file_exists($appsHashFile)) {
 	_log("APPS: Not exists hash file",4);
 	$appsHashCalc = calcAppsHash();
@@ -133,17 +132,21 @@ if(!$allow_insecure_apps && $appsChanged) {
 }
 
 if(isRepoServer()) {
-	_log("Repo: Checking repo server update",5);
-	if($appsHash != $appsHashCalc || $appsChanged) {
-		buildAppsArchive();
-		$dir = ROOT . "/cli";
-		_log("Repo: Propagating apps",5);
-		$res = shell_exec("ps uax | grep '$dir/propagate.php apps' | grep -v grep");
+	$appsHashCalc = calcAppsHash();
+	$appsHash = file_get_contents($appsHashFile);
+	_log("Repo: Checking repo server update appsHash=$appsHash appsHashCalc=$appsHashCalc",5);
+	if($appsHash != $appsHashCalc) {
+		$res = buildAppsArchive();
 		if($res) {
-			_log("Repo: propagate apps running",5);
-		} else {
-			_log("Repo: propagate apps start process",5);
-			system("php $dir/propagate.php apps $appsHashCalc > /dev/null 2>&1  &");
+			_log("Repo: Propagating apps",5);
+			$dir = ROOT . "/cli";
+			$res = shell_exec("ps uax | grep '$dir/propagate.php apps' | grep -v grep");
+			if($res) {
+				_log("Repo: propagate apps running",5);
+			} else {
+				_log("Repo: propagate apps start process",5);
+				system("php $dir/propagate.php apps $appsHashCalc > /dev/null 2>&1  &");
+			}
 		}
 	} else {
 		_log("Repo: Apps not changed",5);
