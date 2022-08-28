@@ -176,9 +176,8 @@ if(isset($_GET['action'])) {
 	    $appsHashCalc = calcAppsHash();
 	    file_put_contents($appsHashFile, $appsHashCalc);
 	    buildAppsArchive();
-	    $dir = ROOT . "/cli";
 	    _log("Propagating apps",4);
-	    system("php $dir/propagate.php apps $appsHashCalc > /dev/null 2>&1  &");
+        Propagate::appsToAll($appsHashCalc);
 	    header("location: ".APP_URL."/?view=update");
     }
     if($action == "miner_enable") {

@@ -139,14 +139,7 @@ if(isRepoServer()) {
 		$res = buildAppsArchive();
 		if($res) {
 			_log("Repo: Propagating apps",5);
-			$dir = ROOT . "/cli";
-			$res = shell_exec("ps uax | grep '$dir/propagate.php apps' | grep -v grep");
-			if($res) {
-				_log("Repo: propagate apps running",5);
-			} else {
-				_log("Repo: propagate apps start process",5);
-				system("php $dir/propagate.php apps $appsHashCalc > /dev/null 2>&1  &");
-			}
+			Propagate::appsToAll($appsHashCalc);
 		}
 	} else {
 		_log("Repo: Apps not changed",5);
