@@ -87,6 +87,7 @@ require_once __DIR__. '/../common/include/top.php';
             <option value="">Type</option>
             <option value="<?php echo TX_TYPE_REWARD ?>" <?php if(isset($dm['search']['type']) && in_array(TX_TYPE_REWARD,$dm['search']['type'])) { ?> selected<?php } ?>>Reward</option>
             <option value="<?php echo TX_TYPE_SEND ?>" <?php if(isset($dm['search']['type']) && in_array(TX_TYPE_SEND,$dm['search']['type'])) { ?> selected<?php } ?>>Transfer</option>
+            <option value="<?php echo TX_TYPE_BURN ?>" <?php if(isset($dm['search']['type']) && in_array(TX_TYPE_BURN,$dm['search']['type'])) { ?> selected<?php } ?>>Burn</option>
             <option value="<?php echo TX_TYPE_MN_CREATE ?>" <?php if(isset($dm['search']['type']) && in_array(TX_TYPE_MN_CREATE,$dm['search']['type'])) { ?> selected<?php } ?>>Create masternode</option>
             <option value="<?php echo TX_TYPE_MN_REMOVE ?>" <?php if(isset($dm['search']['type']) && in_array(TX_TYPE_MN_REMOVE,$dm['search']['type'])) { ?> selected<?php } ?>>Remove masternode</option>
             <option value="<?php echo TX_TYPE_FEE ?>" <?php if(isset($dm['search']['type']) && in_array(TX_TYPE_FEE,$dm['search']['type'])) { ?> selected<?php } ?>>Fee</option>
