@@ -162,7 +162,9 @@ $fee = Blockchain::getFee();
                     </div>
                 </div>
                 <div class="text-nowrap">
-                    <span class="text-muted font-size-13">Total supply <strong><?php echo num(TOTAL_SUPPLY) ?></strong></span>
+                    <span class="text-muted font-size-13">Total supply <strong><?php echo num(Blockchain::getTotalSupply()) ?></strong></span>
+                    <br/>
+                    <span class="text-muted font-size-13">Burned: <strong><?php echo num(Transaction::getBurnedAmount()) ?></strong></span>
                 </div>
             </div>
         </div>
