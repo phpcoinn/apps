@@ -33,7 +33,7 @@ require_once __DIR__. '/../common/include/top.php';
             <th>Masternode</th>
             <th>Days duration</th>
             <th>Projected time start</th>
-            <th>Calculated time start</th>
+            <th>Real/Calculated time start</th>
             <th>Total supply</th>
         </tr>
         </thead>
@@ -46,22 +46,23 @@ require_once __DIR__. '/../common/include/top.php';
                 } else {
 	                $days = null;
                 }
-
+                $key = $row['key'];
+                $has_reward = $row['total']>0;
                 ?>
                 <tr class="<?php if($height >= $row['block'] && $height <= $row['end_block']) { ?>table-success<?php } ?>">
                     <td><?php echo $row['phase'] ?></td>
                     <td><?php echo $row['segment'] ?></td>
                     <td><?php echo $row['block'] ?></td>
-                    <td><?php echo $row['end_block'] ?></td>
-                    <td><?php echo $row['blocks'] ?></td>
+                    <td><?php if($has_reward) echo $row['end_block'] ?></td>
+                    <td><?php if($has_reward) echo $row['blocks'] ?></td>
                     <td><?php echo $row['total'] ?></td>
                     <td><?php echo $row['miner'] ?></td>
                     <td><?php echo $row['gen'] ?></td>
                     <td><?php echo $row['mn'] ?></td>
-                    <td><?php echo $days==null ? null : round($days, 2) ?></td>
+                    <td><?php if($has_reward) echo $days==null ? null : round($days, 2) ?></td>
                     <td><?php echo display_date($row['time']) ?></td>
-                    <td><?php if(isset($real[$key])) echo display_date($real[$key]['time'])  ?></td>
-                    <td><?php echo $row['supply'] ?></td>
+                    <td><?php echo display_date($row['real_start_time'])  ?></td>
+                    <td><?php if($has_reward) echo $row['supply'] ?></td>
                 </tr>
             <?php } ?>
         </tbody>
